@@ -1,3 +1,11 @@
+/*
+    Copyright Masterchain Grazcoin Grimentz 2013-2014
+    https://github.com/masterchain/masterchain-world
+    https://masterchain.info
+    masterchain@@bitmessage.ch
+    https://masterchain.info/LICENSE.txt
+*/
+
 function BTCController($scope, $http) {
 
     // Scope members

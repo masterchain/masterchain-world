@@ -1,10 +1,10 @@
 #######################################################
 #                                                     #
 #  Copyright Masterchain Grazcoin Grimentz 2013-2014  #
-#  https://github.com/grazcoin/mastercoin-tools       #
+#  https://github.com/masterchain/masterchain-world   #
 #  https://masterchain.info                           #
 #  masterchain@@bitmessage.ch                         #
-#  License AGPLv3                                     #
+#  https://masterchain.info/LICENSE.txt               #
 #                                                     #
 #######################################################
 
