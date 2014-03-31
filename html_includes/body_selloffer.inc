@@ -32,11 +32,15 @@
                                         </tr>
                                         <tr>
                                             <td>Amount for sell</td>
-                                            <td>{{transactionInformation.formatted_amount}}</td>
+                                            <td><span class="pull-left">{{transactionInformation.formatted_amount}}</span>
+                                                <a href="sellform.html?addr=&amount={{transactionInformation.balance}}&from={{transactionInformation.from_address}}&currency={{currency}}&action=Update"><button type="button" class="pull-right btn btn-success btn-xs">UPDATE</button></a>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Amount available</td>
-                                            <td>{{transactionInformation.formatted_amount_available}}</td>
+                                            <td><span class="pull-left">{{transactionInformation.formatted_amount_available}}</span>
+                                                <a href="sellform.html?addr=&amount={{transactionInformation.balance}}&from={{transactionInformation.from_address}}&currency={{currency}}&amount=0&price=0&action=Cancel"><button type="button" class="pull-right btn btn-success btn-xs">CANCEL</button></a>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Bitcoin amount desired</td>

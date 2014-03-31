@@ -67,6 +67,12 @@
                                         ng-model="currency"
                                         type="text">
                                 </div>
+                                <div class="input string optional">
+                                    <label class="string optional" for="action">Action</label>
+                                    <input class="string optional form-control" readonly="readonly" id="action"
+                                        ng-model="action"
+                                        type="text">
+                                </div>
                                 <div style="display:block;">
                                     <button class="btn btn-primary btnMargin"
                                         id="createRawTransaction">

@@ -20,16 +20,65 @@ function AcceptOfferController($scope, $http) {
     $scope.currency = "";
     $scope.toAddress = "";
     $scope.toAddrReadOnly = true;
-
-    $scope.keyChange = function () {
-
-        if ($scope.key != "") {
-            $('#reSign').attr('disabled', false);
+    
+    var myURLParams = BTCUtils.getQueryStringArgs();
+    
+    $scope.simpleView=myURLParams['SimpleView']=="true";
+    $scope.senderAddress = myURLParams['from'];
+    
+    var wallet = Wallet.GetWallet();
+    $scope.addressArray=new Array();
+    
+    for(var i=0; i<wallet.addresses.length; i++){
+            $scope.addressArray[i]={"address":wallet.addresses[i],"name":wallet.names[i]};
         }
-        else {
-            $('#reSign').attr('disabled', true);
+
+    if ($scope.senderAddress) {
+        if (wallet.addresses.indexOf($scope.senderAddress) == -1) {
+    	    $scope.addressArray.splice(0, 0, {"address":$scope.senderAddress,"name":""});
         }
-    };
+    }else{
+        if($scope.addressArray.length>0)
+            $scope.senderAddress=$scope.addressArray[0].address;
+    }
+
+    $scope.setSenderAddress = function(address){
+        $scope.senderAddress=address;
+        $('#selectSenderAddress').modal('hide');
+    }
+    
+    //private key
+    $scope.isPKInLocalStorage=IsPKInLocalStorage();
+
+    $scope.unlockWalletErrorShow=false;
+    
+    $scope.validateWalletPassword= function(){
+        $scope.unlockWalletErrorShow=false;
+        
+        var digestEnter = Wallet.calcPwdDigest($scope.walletPasswordEnter);
+        var digestStored = Wallet.LoadEncPwd();
+
+        if (digestEnter != digestStored) {
+            $scope.unlockWalletErrorShow = true;
+            return;
+        }
+
+        var result=null;
+        try{
+            result=DecryptPK($scope.walletPasswordEnter);
+            
+        }catch(e){
+            result=null;
+        }
+        
+        if(result==null){
+            $scope.unlockWalletErrorShow=true;
+        }else{
+            $scope.key=result;
+            $('.invalidKey').hide();
+            $('#unlockWallet').modal('hide');  
+        }
+    }
 
     $scope.getSellofferData = function () {
 
@@ -61,7 +110,20 @@ function AcceptOfferController($scope, $http) {
 
 
 
+function IsPKInLocalStorage(){
+    var from_addr = angular.element($('.AcceptOfferController')).scope().senderAddress;
+    if (!Boolean(from_addr)) return false;
+    var encPK = Wallet.getPK(from_addr);
+    return Boolean(encPK);
+}
 
+function DecryptPK(PWD) {
+    var from_addr = angular.element($('.AcceptOfferController')).scope().senderAddress;
+    if (!Boolean(from_addr)) return false;
+    var encPK = Wallet.getPK(from_addr);
+    return Wallet.decPK(encPK, PWD);
+    //return '5JGmfq9eUYyCHKAsow3NS6Ui9n47MPsbctWcfx4uzcpLmZvoAN8';
+}
 
 
 //class for Context
@@ -105,7 +167,7 @@ BTNClientContext.Signing.ConvertJSON = function (signedTransaction) {
 
 BTNClientContext.Signing.Verify = function () {
     console.log("verify function");
-    var from_addr = $("input.select.optional.form-control.form-control30px.combobox").val();
+    var from_addr = angular.element($('.AcceptOfferController')).scope().senderAddress;
 
 var dataToSend = { addr: from_addr };
 
@@ -116,14 +178,13 @@ console.log(data);
 
 if (data.status == 'OK') {
     ok = true;
-    $('#verifyMessage').addClass('greenText');
+    $('#verifyMessage').addClass('label-success');
     $('#verifyMessage').text('OK');
     $('#verifyMessage').show();
-    BTNClientContext.Resize();
     return ok;
 }
 else {
-    $('#verifyMessage').addClass('greenText');
+    $('#verifyMessage').addClass('label-success');
     ok = false;
     if (data.error == 'invalid pubkey') {
         $('#verifyMessage').text('invalid pubkey');
@@ -131,7 +192,7 @@ else {
         if (data.error == 'missing pubkey') {
             $('#verifyMessage').text('no pubkey on blockchain. use wallet or supply Public Key from brainwallet.org');
         } else {
-	        $('#verifyMessage').addClass('redText');
+	        $('#verifyMessage').addClass('label-danger');
             if (data.error == 'invalid address') {
                 $('#verifyMessage').text('invalid address');
             } else {
@@ -141,18 +202,18 @@ else {
     }
 }
 $('#verifyMessage').show();
-BTNClientContext.Resize();
+
 return ok;
 }).fail(function () {
 
 console.log('fail');
 $('#verifyMessage').text('ping?');
-$('#verifyMessage').addClass('redText');
+$('#verifyMessage').addClass('label-danger');
 
 ok = false;
 
 $('#verifyMessage').show();
-BTNClientContext.Resize();
+
 return ok;
 });
 
@@ -167,7 +228,7 @@ var hashType = 1;
 var sourceScript = [];
 var sourceScriptString = $('#sourceScript').val().split(';');
 $.each(sourceScriptString, function (i, val) {
-sourceScript[i] = new BTNClientContext.parseScript(val);
+sourceScript[i] = BTNClientContext.parseScript(val);
 console.log(val);
 console.log($.toJSON(sourceScript[i]));
 console.log(BTNClientContext.dumpScript(sourceScript[i]));
@@ -254,8 +315,8 @@ console.log(data);
 BTNClientContext.Signing.GetRawTransaction = function () {
 
 
-$('#statusMessage').removeClass('redText');
-$('#statusMessage').addClass('greenTextColor');
+$('#statusMessage').removeClass('label-danger');
+$('#statusMessage').addClass('label-successColor');
 $('#statusMessage').text('');
 
 
@@ -264,7 +325,7 @@ $('#createRawResponseForm').hide();
 var myURLParams = BTCUtils.getQueryStringArgs();
 var marker = myURLParams['marker'];
 var to_address = $("#recipient").val();
-var from_address = $("input.select.optional.form-control.form-control30px.combobox").val();
+var from_address = angular.element($('.AcceptOfferController')).scope().senderAddress;
 var amount = $('#amount').val();
 var currency = $('#currency').val();
 var fee = $('#fee').val();
@@ -304,8 +365,8 @@ if (status.length > 120) {
     status += "...";
 }
 
-$('#statusMessage').removeClass('greenTextColor');
-$('#statusMessage').addClass('redText');
+$('#statusMessage').removeClass('label-successColor');
+$('#statusMessage').addClass('label-danger');
 $('#statusMessage').text(status);
 
 
@@ -337,38 +398,6 @@ return 'localStorage' in window && window['localStorage'] !== null;
     }
 };
 
-BTNClientContext.Signing.initHistoryCombobox = function () {
-    var myURLParams = BTCUtils.getQueryStringArgs();
-    var useAddress = myURLParams['from'];
-
-    var showValuesInCombobox = Wallet.GetAddressesOfFirstWallet();
-    
-    if (useAddress) {
-        if (showValuesInCombobox.indexOf(useAddress) == -1) {
-    	    showValuesInCombobox.splice(0, 0, useAddress);
-        }
-    }
-    
-    $.each(showValuesInCombobox, function (key, value) {
-
-	console.log(key);
-	console.log(value);
-
-	$('#fromAddressOrPublicKey')
-	.append($("<option></option>")
-	.attr("value", value)
-	.text(value));
-
-	//.attr("value", value.address)
-	//    .text(value.address));
-    });
-    
-    if (useAddress) {
-        $("#fromAddressOrPublicKey").val(useAddress);
-    }
-    
-    $("#fromAddressOrPublicKey").combobox();
-};
 
 BTNClientContext.Signing.addAddressToHistory = function () {
     if (BTNClientContext.Signing.supportsStorage()) {
@@ -409,13 +438,6 @@ BTNClientContext.Signing.addAddressToHistory = function () {
 $(document).ready(function myfunction() {
 
     $('#sendLoader').addClass('hideLoader');
-    
-    //Combbox init
-    BTNClientContext.Signing.initHistoryCombobox();
-
-
-
-    BTNClientContext.Resize();
 
 
     var navHeight = $('.navbar').height();
@@ -557,20 +579,6 @@ BTNClientContext.ToRawSigned = function() {
 	}
 }
 
-BTNClientContext.Resize = function () {
-    // console.log($('#amount').width());
-    var width = $('#amount').width() - 25;
-
-    var left = $('#verifyButton').offset().left + 70;
-    //  console.log(left);
-    $('#verifyMessage').width(width);
-    $('#verifyMessage').offset({ left: left });
-};
-
-$(window).resize(function () {
-    BTNClientContext.Resize();
-});
-
 function txSent(text) {
 alert(text ? text : 'No response!');
 }
@@ -616,7 +624,7 @@ BTNClientContext.tx_fetch = function(url, onSuccess, onError, postdata) {
             $('#sendLoader').removeClass('showUntilAjax');
 	    
 	    $('#sendMessage').text('Transaction sent');
-	    $('#sendMessage').addClass('greenTextColor');
+	    $('#sendMessage').addClass('label-successColor');
 	    $('#sendMessage').show();
 
 	    //Get transaction hash code
@@ -631,7 +639,7 @@ BTNClientContext.tx_fetch = function(url, onSuccess, onError, postdata) {
         },
         error:function (xhr, opt, err) {
             $('#sendMessage').text('Transaction send error');
-            $('#sendMessage').addClass('redText');
+            $('#sendMessage').addClass('label-danger');
             $('#sendMessage').show();
             $('#sendLoader').removeClass('showUntilAjax');   
         }

@@ -17,8 +17,22 @@ $(document).ready(function () {
     var url = '';
     if (tx.length < 63)
     {
-    	url = "Address.html?addr=" + tx;
-    	window.location = url;
+		var file = 'addr/' + tx + '.json';	
+        if (currency == 'MSC') {
+           currencyNumber = 0;
+        }	
+        if (currency == 'TMSC') {
+           currencyNumber = 1;
+        }	
+        $.getJSON( file, function( data ) {
+        	console.log("ok");
+	    	url = "Address.html?addr=" + tx + "&currency=" + currency;
+	    	window.location = url;
+        }).fail(function() {
+		    console.log( "error" );
+		    $('#errorAddressModal').modal('show');
+		  });        
+    
     	return;
     }
 
@@ -64,6 +78,7 @@ $(document).ready(function () {
 	},
 	error: function () {
 	    console.log('Error');
+	    $('#errorTransactionModal').modal('show');
 	}
     });
 });

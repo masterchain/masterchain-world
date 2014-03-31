@@ -1,0 +1,246 @@
+@import "//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css";
+.tools {
+  line-height: 26px;
+}
+.btn-custom {
+  background-color: #a8a8a8;
+  border-color: #a8a8a8;
+  color: white;
+}
+.btn-custom:hover,
+.btn-custom:focus,
+.btn-custom:active,
+.btn-custom.active {
+  background-color: #9b9b9b;
+  border-color: #8f8f8f;
+  color: white;
+}
+.btn-custom.disabled:hover,
+.btn-custom.disabled:focus,
+.btn-custom.disabled:active,
+.btn-custom.disabled.active,
+.btn-custom[disabled]:hover,
+.btn-custom[disabled]:focus,
+.btn-custom[disabled]:active,
+.btn-custom[disabled].active,
+fieldset[disabled] .btn-custom:hover,
+fieldset[disabled] .btn-custom:focus,
+fieldset[disabled] .btn-custom:active,
+fieldset[disabled] .btn-custom.active,
+.btn-custom.btn-custom-disabled {
+  background-color: #cccccc;
+  border-color: #cccccc;
+}
+#helpModal .modal-body {
+  font-size: 1.3em;
+}
+.or {
+  position: relative;
+  border-top: 1px solid lightgrey;
+  margin-bottom: 10px;
+}
+.or:before {
+  content: 'or';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin: -12px 0 0px -7px;
+  padding: 0 3px;
+  background-color: #ffffff;
+  font-weight: bold;
+}
+.element-placeholder {
+  background: #ffffb1;
+  border: 1px solid #ffd560;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  height: 80px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.slide-out-div {
+  padding: 20px;
+  width: 300px;
+  background: #eeeeee;
+  border: 2px solid lightgrey;
+}
+.slide-out-div h3 {
+  padding: 0;
+  margin: 0;
+  margin-bottom: 20px;
+}
+.slide-out-div p {
+  margin: 20px 0;
+}
+.address {
+  background: white;
+  border: 1px solid #cccccc;
+  margin-bottom: 4px;
+  padding: 6px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.address .row-fluid {
+  clear: both;
+}
+.address .remove-address,
+.address .add-key {
+  float: right;
+  padding: 0px 4px;
+  margin-left: 4px;
+}
+.address .address-title {
+  float: left;
+  width: 100%;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  padding: 5px;
+  background: #eeeeee;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: relative;
+  font-size: 1em;
+}
+.address .address-title img.handle {
+  cursor: move;
+}
+.address .address-title a.addr {
+  font-size: 0.95em;
+}
+.address .address-title a.name {
+  font-size: 1.3em;
+}
+.address .address-title span {
+  cursor: pointer;
+  font-size: 1em;
+  line-height: 30px;
+  font-weight: bold;
+}
+.address .address-title .btn {
+  position: absolute;
+  padding: 2px 4px;
+  border: none;
+}
+.address .address-title .btn-danger {
+  right: 2px;
+}
+.address .address-title .btn-custom {
+  right: 62px;
+}
+.address .address-title .btn-info {
+  right: 24px;
+}
+.address .address-title .btn-default {
+  right: 104px;
+}
+.address .currency-container {
+  text-align: center;
+}
+.address .currency-container .currency-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 2px;
+  text-align: center;
+  clear: both;
+}
+.address .currency-container .currency-buttons {
+  clear: both;
+  margin-bottom: 4px;
+  display: block;
+  overflow: hidden;
+  text-align: center;
+}
+.address .currency-container .currency-buttons .btn {
+  padding: 2px 10px;
+}
+.address .currency-container .currency-value {
+  clear: both;
+}
+.address .currency-container .currency-value button {
+  min-width: 130px;
+  font-size: 14px;
+}
+.address .currency-container .currency-value button.dollar {
+  background: #dddddd;
+}
+.address .currency-container:nth-child(1) {
+  background: red;
+  border: 1px solid black;
+}
+btn.dollar {
+  background: red;
+}
+.totals {
+  margin-top: 15px;
+  margin-bottom: 20px;
+  padding: 6px;
+  background: #dddddd;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  overflow: hidden;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.totals .total-title {
+  font-size: 1.2em;
+  padding: 2px;
+  margin-bottom: 4px;
+}
+.totals .currency-container {
+  text-align: center;
+}
+.totals .currency-container .currency-title {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 2px;
+  text-align: center;
+  clear: both;
+}
+.totals .currency-container .currency-value {
+  clear: both;
+  text-align: center;
+}
+.totals .currency-container .currency-value button {
+  min-width: 130px;
+  font-size: 14px;
+}
+table.table td a.btn-pass {
+  padding: 6px;
+  font-size: 2rem;
+  margin-left: 6px;
+  width: 40px;
+}
+table.table td a.btn-create {
+  font-size: 1em;
+  width: auto;
+}
+input.ng-invalid {
+  border-color: #a94442;
+}
+.inner a.btn-xs {
+  padding: 2px 4px;
+  line-height: 16px;
+}
+.inner .btn-sm,
+.inner .btn-xs {
+  margin: 2px;
+}
+@media (max-width: 550px) {
+  .address .address-title span,
+  .totals .address-title span {
+    clear: both;
+    display: block;
+  }
+  .address .currency-container,
+  .totals .currency-container {
+    float: none;
+    width: 100%;
+  }
+}
+@media (max-width: 750px) {
+  .no-fixed {
+    padding: 0;
+  }
+}

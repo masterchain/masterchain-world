@@ -10,15 +10,12 @@
 
 import urlparse
 import os, sys
-lib_path = os.path.abspath('..')
-sys.path.append(lib_path)
-from msc_utils_parsing import *
 from msc_apps import *
 import random
 
 def sell_form_response(response_dict):
     info(response_dict)
-    expected_fields=['seller', 'amount', 'price', 'min_buyer_fee', 'fee', 'blocks', 'currency']
+    expected_fields=['seller', 'action', 'amount', 'price', 'min_buyer_fee', 'fee', 'blocks', 'currency']
     for field in expected_fields:
         if not response_dict.has_key(field):
             return (None, 'No field '+field+' in response dict '+str(response_dict))
@@ -28,6 +25,17 @@ def sell_form_response(response_dict):
     seller=response_dict['seller'][0]
     if not is_valid_bitcoin_address_or_pubkey(seller):
         return (None, 'Buyer is neither bitcoin address nor pubkey')
+
+    action_name=response_dict['action'][0]
+    if action_name != 'New' and action_name != 'Update' and action_name != 'Cancel':
+        return (None, 'Action must be New/Update/Cancel')
+    if action_name == 'New':
+        action=1
+    if action_name == 'Update':
+        action=2
+    if action_name == 'Cancel':
+        action=3
+
     amount=response_dict['amount'][0]
     try:
         if float(amount)<0 or float(amount)>max_currency_value:
@@ -91,7 +99,7 @@ def sell_form_response(response_dict):
                 response_status='OK'
 
     if pubkey != None:
-        (tx_to_sign_dict, error_msg)=prepare_sell_tx_for_signing(seller, amount, bitcoin_amount_desired, min_buyer_fee, fee, blocks, currency_id)
+        (tx_to_sign_dict, error_msg)=prepare_sell_tx_for_signing(seller, action, amount, bitcoin_amount_desired, min_buyer_fee, fee, blocks, currency_id)
         if error_msg != None:
             return (None, error_msg)
     else:
@@ -102,7 +110,7 @@ def sell_form_response(response_dict):
     response='{"status":"'+response_status+'", "transaction":"'+tx_to_sign_dict['transaction']+'", "sourceScript":"'+tx_to_sign_dict['sourceScript']+'"}'
     return (response, None)
 
-def prepare_sell_tx_for_signing(seller, amount, bitcoin_amount_desired, btc_min_buyer_fee, btc_fee, blocks, currency_id):
+def prepare_sell_tx_for_signing(seller, action, amount, bitcoin_amount_desired, btc_min_buyer_fee, btc_fee, blocks, currency_id):
 
     # check if address or pubkey was given as seller
     if seller.startswith('0'): # a pubkey was given
@@ -157,16 +165,17 @@ def prepare_sell_tx_for_signing(seller, amount, bitcoin_amount_desired, btc_min_
     # dust to exodus
     # double dust to rawscript "1 [ change_address_pub ] [ dataHex_obfuscated ] [ dataHex2_obfuscated ] 3 checkmultisig"
     # change to change
-    tx_type=20 # 0x14 sell offer
+    tx_version=0x0001 # ver 1
+    tx_type=0x0014    # sell offer
 
     dataSequenceNum=1
     dataHex_list=[]
     dataHex_list.append('{:02x}'.format(0) + '{:02x}'.format(dataSequenceNum) + \
-            '{:08x}'.format(tx_type) + '{:08x}'.format(currency_id) + \
+            '{:04x}'.format(tx_version) + '{:04x}'.format(tx_type) +'{:08x}'.format(currency_id) + \
             '{:016x}'.format(satoshi_amount) + '{:016x}'.format(bitcoin_amount_desired) + \
             '{:02x}'.format(blocks) + '{:06x}'.format(0))
     dataHex_list.append('{:02x}'.format(0) + '{:02x}'.format(dataSequenceNum) + \
-            '{:06x}'.format(min_buyer_fee))
+            '{:06x}'.format(min_buyer_fee) + '{:02x}'.format(action))
 
     # create the BIP11 magic
     valid_dataHex_obfuscated_list=[]

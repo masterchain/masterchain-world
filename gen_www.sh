@@ -101,28 +101,6 @@ cat	head_end.inc \
 	body_btcpayment.inc \
 	body_last.inc >> $FILE
 
-FILE=../www/sendform.html
-TITLE="Send Coins"
-LINK1="css/acceptform.css"
-SCRIPT1="wallet.js"
-SCRIPT2="sendform.js"
-SCRIPT3="masterEvents.js"
-SCRIPT4="js/BTCClientContext.js"
-cat	head_begin.inc > $FILE
-echo "         $TITLE" >> $FILE
-cat	head_middle.inc >> $FILE
-echo "      <link href=\"$LINK1\" rel=\"stylesheet\">" >> $FILE
-echo "      <script src=\"$SCRIPT1\"></script>" >> $FILE
-echo "      <script src=\"$SCRIPT2\"></script>" >> $FILE
-echo "      <script src=\"$SCRIPT3\"></script>" >> $FILE
-echo "      <script src=\"$SCRIPT4\"></script>" >> $FILE
-cat	bitcoin.inc \
-	head_end.inc \
-	body_first.inc \
-	body_nav.inc \
-	body_sendform.inc \
-	body_last.inc >> $FILE
-
 FILE=../www/sellform.html
 TITLE="Create Sell Offer"
 LINK1="css/acceptform.css"
@@ -166,20 +144,6 @@ cat	bitcoin.inc \
 	body_nav.inc \
 	body_acceptform.inc \
 	body_last.inc >> $FILE
-
-FILE=../www/wallet.html
-TITLE="Wallet"
-SCRIPT1="wallet.js"
-cat	head_begin.inc > $FILE
-echo "         $TITLE" >> $FILE
-cat	head_middle.inc >> $FILE
-echo "      <script src=\"$SCRIPT1\"></script>" >> $FILE
-cat	head_end.inc \
-	body_first.inc \
-	body_nav.inc \
-	body_wallet.inc \
-	body_last.inc >> $FILE
-
 
 FILE=../www/404.html
 TITLE="404"

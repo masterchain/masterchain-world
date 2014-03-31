@@ -27,19 +27,61 @@
       <!-- Bootstrap core CSS -->
       <link href="css/bootstrap.css" rel="stylesheet">
       <link href="css/bootstrap-theme.css" rel="stylesheet">
-      <link href="css/bootstrap-combobox.css" rel="stylesheet"> 
+      <link href="css/bootstrap-combobox.css" rel="stylesheet">
       <link href="css/search.css" rel="stylesheet">
+      <link href="css/wallet.css" rel="stylesheet">
       <script src="js/jquery-1.10.1.min.js"></script>
+      <script src="js/jquery-ui-1.10.4.custom.min.js"></script>
+      <script src="js/jquery.ui.touch-punch.min.js"></script>
       <script src="js/angular.js"></script>
       <script src="btcutils.js"></script>
       <script src="js/truncate.js"></script>
       <script src="masterPage.js"></script>
       <script src="btc02.js"></script>
       <script src="js/bootstrap-combobox.js"></script>
+      <script src="js/jquery.tabSlideOut.v1.3.js"></script>
+      <script src="js/sortable.js"></script>
       <script>
-         var myApp = angular.module('myApp', ['truncate']);
+         var myApp = angular.module('myApp', ['truncate','ui.sortable']);
       </script>
       <script src="js/bootstrap.min.js"></script>
+      <script src="js/match.js"></script>
+      <script src="js/base_directives.js"></script>
+      <script src="js/validate.js"></script>
+
+
+      <script src="js/CryptoJS/components/core-min.js"></script>
+	  <script src="js/CryptoJS/components/enc-utf16-min.js"></script>
+	  <script src="js/CryptoJS/components/enc-base64-min.js"></script>
+
+      <script type="text/javascript" src="js/BitcoinJS/crypto-js/crypto.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/crypto-js/sha256.js"></script>
+      <script type="text/javascript" src="js/BitcoinJS/crypto-js/ripemd160.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/jsbn/prng4.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/jsbn/rng.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/jsbn/jsbn.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/jsbn/jsbn2.js"></script>
+
+	  <script type="text/javascript" src="js/BitcoinJS/jsbn/ec.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/jsbn/sec.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/events/eventemitter.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/bitcoin.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/util.js"></script>
+	  <script type="text/javascript" src="js/BitcoinJS/base58.js"></script>
+
+	  <script type="text/javascript" src="js/BitcoinJS/address.js"></script>
+      <script type="text/javascript" src="js/BitcoinJS/ecdsa.js"></script>
+      <script type="text/javascript" src="js/BitcoinJS/eckey.js"></script>
+
+	<script type="text/javascript" src="js/BitcoinJS/opcode.js"></script>
+	<script type="text/javascript" src="js/BitcoinJS/script.js"></script>
+	<script type="text/javascript" src="js/BitcoinJS/transaction.js"></script>
+
+	<script type="text/javascript" src="js/BitcoinJS/wallet.js"></script>
+	 <script type="text/javascript" src="js/BitcoinJS/txdb.js"></script>
+	<script type="text/javascript" src="js/jquery.json-2.4.js"></script>
+	  <script src="js/CryptoJS/rollups/sha256.js"></script>
+      <script src="js/CryptoJS/rollups/aes.js"></script>
       <script src="wallet.js"></script>
       <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
       <!--[if lt IE 9]>
@@ -81,51 +123,353 @@
                </div>
             </div>
             <div class="container page-container" ng-controller="WalletController">
-                <div class="row">
+                <div class="row-fluid">
                     <div class="no-fixed col-sm-9 col-sm-push-3 col-md-10 col-md-push-2">
                         <div class="inner">
-                            <div class="row">
-				<div class="col-md-12">
-					<table class="table table-striped table-hover table-condensed">
-						<tr>
-							<td>Wallet UUID:</td>
-							<td><span class="pull-right">{{uuid}}</span></td>
-						</tr>
-						<tr>
-							<td>Tools</td>
-							<td class="btnCell">
-							<button type="button" ng-click="CreateNewWallet()" class="btc-tbl-btn pull-right btn btn-success btn-xs">Create new wallet</button>
-							<button type="button" class="btc-tbl-btn pull-right btn btn-success btn-xs">Sync with server</button>
-							</td>
-						</tr>
-					</table>
-				</div>
-            		    </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-condensed">
-                                        <caption>Table of addresses</caption>
-                                        <thead>
-                                            <tr>
-                                                <th>Address</th>
-                                                <th ng-repeat="header in currencies">{{header.name}}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr ng-repeat="addr in addressArray">
-                                                <td>
-                                                    <button type="button" ng-click="DeleteAddress($index)" class="btc-tbl-btn btn btn-success btn-xs">X</button>
-                                                    <a href="Address.html?addr={{addr.address}}">{{addr.address}}</a>
-                                                </td>
-                                                <td ng-repeat="balance in addr.balance">
-                                                    <a href="sendform.html?addr=&amount={{balance}}&from={{addr.address}}&currency={{currencies[$index].symbol}}"><button type="button" class="btc-tbl-btn btn btn-success btn-xs">Send</button></a>
-                                                    <a href="sellform.html?addr=&amount={{balance}}&from={{addr.address}}&currency={{currencies[$index].symbol}}"><button type="button" class="btc-tbl-btn btn btn-success btn-xs">Sell</button></a>
-						    {{balance}}
-						</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+            				<table class="table table-striped table-hover table-condensed">
+            					<tr>
+            						<td><strong class="pull-left">Wallet UUID:</strong>
+            						<a popover data-trigger="hover"  data-html="true" data-content="Create password to enable private keys functions" data-placement="left" href data-toggle="modal" data-target="#createWalletPass" ng-show="!isPasswordExist()" class="btn-pass btn btn-xs btn-success pull-right btn-create"><i class="fa fa-plus"></i> Create password</a>
+
+<div class="modal fade" id="createWalletPass" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Create the wallet's password</h4>
+      </div>
+      <div class="modal-body">
+
+        <form name="walletPassCreation">
+
+            <input placeholder="Password" class="form-control" ng-model="walletPassword" ng-pattern="/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]*$/" type="password" name="walletPassword" ng-minlength="8" data-ng-class="{'ng-invalid':walletPassCreation.walletPasswordConfirm.$error.match}"  required/>
+            <div class="label label-danger" ng-show="walletPassCreation.walletPassword.$error.required && walletPassCreation.walletPassword.$dirty">Password is required</div>
+   <div class="label label-danger" ng-show="!walletPassCreation.walletPassword.$error.required && (walletPassCreation.walletPassword.$error.minlength || walletPassCreation.walletPassword.$error.maxlength) && walletPassCreation.walletPassword.$dirty">Password is not secure enough (the length is less than 8 characters).</div>
+   <div class="label label-danger" ng-show="!walletPassCreation.walletPassword.$error.required && !walletPassCreation.walletPassword.$error.minlength && !walletPassCreation.walletPassword.$error.maxlength && walletPassCreation.walletPassword.$error.pattern && walletPassCreation.walletPassword.$dirty">Password contains illegal characters, must have letters, numbers and !@#$%^&*()_+-=[]{};:\|,.<>/?</div><br/>
+            <input placeholder="Password Confirm" class="form-control" ng-model="walletPasswordConfirm" type="password" data-match="walletPassword" name="walletPasswordConfirm" required />
+            <div class="label label-danger" data-ng-show="walletPassCreation.walletPasswordConfirm.$error.match">Password does not match verification</div>
+        </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+        <button type="button" ng-disabled='walletPassCreation.$invalid' ng-click="createWalletPassword()" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+            						<a popover data-trigger="hover"  data-html="true" data-content="Enter wallet's password to unlock private keys functions" data-placement="left" href data-toggle="modal" data-target="#unlockWallet" ng-show="isPasswordExist() && !isPasswordEntered()" class="btn-pass btn btn-xs btn-danger pull-right"><i class="fa fa-lock"></i></a>
+
+<div class="modal fade" id="unlockWallet" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Enter password</h4>
+      </div>
+      <div class="modal-body">
+
+        <form name="unlockWallet">
+            <div class="alert alert-danger alert-dismissable" ng-show="unlockWalletErrorShow">
+              The <strong>password</strong> is not correct
+            </div>
+            <input placeholder="Password" class="form-control" ng-model="walletPasswordEnter" ng-pattern="/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]*$/" type="password" name="walletPasswordEnter" ng-minlength="8" required/>
+            <div class="label label-danger" ng-show="unlockWallet.walletPasswordEnter.$error.required && unlockWallet.walletPasswordEnter.$dirty">Password is required</div>
+   <div class="label label-danger" ng-show="!unlockWallet.walletPasswordEnter.$error.required && (unlockWallet.walletPasswordEnter.$error.minlength || unlockWallet.walletPasswordEnter.$error.maxlength) && unlockWallet.walletPasswordEnter.$dirty">Password is not secure enough (the length is less than 6 characters).</div>
+   <div class="label label-danger" ng-show="!unlockWallet.walletPasswordEnter.$error.required && !unlockWallet.walletPasswordEnter.$error.minlength && !unlockWallet.walletPasswordEnter.$error.maxlength && unlockWallet.walletPasswordEnter.$error.pattern && unlockWallet.walletPasswordEnter.$dirty">Password contains illegal characters, must have letters, numbers and !@#$%^&*()_+-=[]{};:\|,.<>/?</div>
+   </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+        <button type="button" ng-disabled='unlockWallet.$invalid' ng-click="validateWalletPassword()" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+                                    <a popover data-trigger="hover"  data-html="true" data-content="Private key functions are enabled" data-placement="left" href="javascript:;" ng-show="isPasswordEntered()" class="btn-pass btn btn-xs btn-success pull-right"><i class="fa fa-unlock"></i></a>
+                            <strong class="pull-right">{{uuid}}</strong>
+                            </td>
+            					</tr>
+            					<tr>
+            						<td><strong class="pull-left tools">Tools</strong>
+            						<button type="button" data-toggle="modal" data-target="#addAddress" class="btc-tbl-btn pull-right btn btn-success btn-xs"><i class="glyphicon glyphicon-plus"></i>  Add address</button>
+
+
+
+<div class="modal fade" id="addAddress" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Add address</h4>
+      </div>
+      <div class="modal-body">
+
+        <form name="addAddressForm">
+         <div class="form-group">
+			<label for="addAddress">Address</label>
+            <input placeholder="Address" class="form-control" ng-model="addAddress" ng-pattern="/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]*$/" type="text" name="addAddress" ng-required='!addPublicKey && !addPrivateKey' />
+         </div>
+         <div class="or"></div>
+         <div class="form-group">
+			<label for="addPrivateKey">Private-key</label>
+            <input placeholder="Private-key" class="form-control" ui-validate="'checkPrivateKeyAddAddress($value)'" ng-model="addPrivateKey" ng-required="!addAddress && !addPublicKey" ng-pattern="/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]*$/" type="text" name="addPrivateKey" ng-required=''/>
+            <div class="label label-danger" ng-show="showInvalidPKDlg">Private Key is not valid</div>
+            <div class="label label-info" ng-show="showPWDMissing">Wallet's password is missing. The private key won't be saved<br /> as the password is needed to encrypt it.</div>
+         </div>
+      </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal" ng-click="cleanAddAddressToWallet()">Close</button>
+        <button type="button" ng-disabled='(addAddressForm.$error.required && addAddressForm.$invalid) || (addAddressForm.$invalid && addAddressForm.addPrivateKey.$dirty)' ng-click="addAddressToWallet()" class="btn btn-primary">Ok</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="errorAddressModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Error Adding Address</h4>
+      </div>
+      <div class="modal-body">
+        The information regarding this address is not available,<br/> as it doesn't contain alternative coins yet. Buy some first.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+            						<button type="button" data-toggle="modal" data-target="#backupWallet" class="btc-tbl-btn pull-right btn btn-custom btn-xs"><i class="glyphicon glyphicon-floppy-save"></i>  Backup</button>
+
+
+
+<div class="modal fade" id="backupWallet" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">The wallet backup</h4>
+      </div>
+      <div class="modal-body">
+      	<textarea class="form-control" rows="6">{{currentWallets}}</textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+            						<button type="button" data-toggle="modal" data-target="#restoreWallet" class="btc-tbl-btn pull-right btn btn-primary btn-xs"><i class="glyphicon glyphicon-import"></i>  Restore Backup</button>
+
+
+
+
+<div class="modal fade" id="restoreWallet" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Restore wallet</h4>
+      </div>
+      <div class="modal-body">
+      	<textarea class="form-control" rows="6" ng-model="walletJSONtoRestore" required="required"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" ng-disabled='!walletJSONtoRestore' ng-click="restoreWallets(walletJSONtoRestore)" class="btn btn-primary">Restore</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+            						</td>
+            					</tr>
+            					<tr>
+            						<td class="text-right"><strong class="pull-left tools">Sort addresses</strong>
+            						<span  ng-repeat="currency in currencies">
+            						<button class="btc-tbl-btn btn btn-xs" style="background:{{currency_colors[$index]}}"  ng-click="sortByCurrency(currency.symbol)"><i class="glyphicon glyphicon-sort-by-attributes-alt"></i> {{currency.symbol}}</button>
+            						</span>
+            						</td>
+            					</tr>
+            				</table>
+                            <!-- addresses -->
+                            <div class="list-container" ui-sortable="sortableOptions" ng-model="addressArray">
+                            <div class="row-fluid address" ng-repeat="addr in addressArray">
+                                    <div class="row-fluid">
+
+                                        <div class="address-title">
+                                            <div class="pull-left" ng-show="showAddress"><img src="img/drag.png" class="handle">
+                                            <span ng-click="toggleAddress()">Address</span>
+                                            <a class="addr" href="Address.html?addr={{addr.address}}">{{addr.address}}</a>
+                                            </div>
+
+                                            <div class="pull-left" ng-hide="showAddress"><img src="img/drag.png" class="handle">
+                                            <span ng-click="toggleAddress()">Name</span>
+                                            <a class="name" href="Address.html?addr={{addr.address}}">{{addr.name}}</a>
+                                            </div>
+
+
+<div class="modal fade" id="lastTransaction" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Last 10 transactions</h4>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-hover table-condensed">
+         <thead>
+            <tr>
+               <th>Transaction</th>
+               <th>Amount</th>
+               <th>Date</th>
+               <th>Type</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr ng-repeat="trans in lastTransactions">
+               <td>
+                  <img class="icon24 round-corner {{trans.color}} iconPopupInit"
+                     ng-src="ico/{{trans.icon}}24t.png"
+                     popover data-trigger="hover" data-html="true"
+                     data-content="{{trans.icon_text}}"
+                     data-placement="right"
+                     alt="" />
+                  <a ng-href="{{trans.page}}?tx={{trans.tx_hash}}&currency={{currency}}">{{trans.tx_hash | characters:10}}</a>
+               </td>
+               <td>{{trans.formatted_amount}} ({{trans.currency}})</td>
+               <td>{{trans.tx_time | date:'dd MMM HH:mm'}}</td>
+               <td>{{trans.title}}</td>
+            </tr>
+         </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+                                            <a href ng-click="DeleteAddress($index)" class="btc-tbl-btn btn btn-danger btn-xs remove-address"><i class="glyphicon glyphicon-remove"></i></a>
+
+                                            <a href data-toggle="modal" data-target="#setName{{addr.address}}" class="btc-tbl-btn btn btn-info btn-xs add-key" popover data-trigger="hover" data-html="true" data-content="Set a Name to this Address" data-placement="left"> <i class="glyphicon glyphicon-edit"></i> <i class="glyphicon glyphicon-font"></i></a>
+
+                                            <a href ng-show="!isPasswordExist() || !isPasswordEntered()" popover data-trigger="hover"  data-html="true" data-content="Disabled, enter the wallet password" data-placement="left" class="btc-tbl-btn btn btn-custom btn-custom-disabled btn-xs add-key" ><i class="glyphicon glyphicon-remove"></i> PK</a>
+
+                                            <a href ng-click="validPrivateKey=false;" ng-show="isPasswordEntered() && !addr.pk" data-toggle="modal" data-target="#setPrivateKey{{addr.address}}" class="btc-tbl-btn btn btn-custom btn-xs add-key" popover data-trigger="hover" data-html="true" data-content="Set a private key" data-placement="left"><i class="glyphicon glyphicon-plus"></i> PK</a>
+
+                                            <a popover data-trigger="hover" data-html="true" data-content="Edit / View private key" data-placement="left" href ng-click="decryptPrivateKey($index,addr.pk,addr.address); validPrivateKey=false;" ng-show="isPasswordEntered() && addr.pk" data-toggle="modal" data-target="#setPrivateKey{{addr.address}}" class="btc-tbl-btn btn btn-custom btn-xs add-key"><i class="glyphicon glyphicon-edit"></i> PK</a>
+
+                                            <a popover data-trigger="hover" data-html="true" data-content="Last 10 transactions" data-placement="left" href data-toggle="modal" ng-click="getLastTransaction(addr.address)" data-target="#lastTransaction" class="btn btn-xs btn-default btn-transactions"><i class="glyphicon glyphicon-transfer"></i></a>
+                                        </div>
+                                    </div>
+
+<div class="modal fade" id="setName{{addr.address}}" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Enter name for address: <br/>{{addr.address}}</h4>
+      </div>
+      <div class="modal-body">
+
+        <form name="setName">
+            <input class="form-control" autocomplete="off" required="required" placeholder="Name" type="text" ng-model="addr.name" name="name">
+
+            <div class="label label-danger" ng-show="setName.name.$error.required && setName.name.$dirty">Name is required</div>
+   </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+        <button type="button" ng-disabled='setName.$invalid' ng-click="setNameFunction(addr.address,addr.name)" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="setPrivateKey{{addr.address}}" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="clearPK()">&times;</button>
+        <h4 class="modal-title" ng-show="!addr.pk">Enter private key for address: <br/>{{addr.address}}</h4>
+        <h4 class="modal-title" ng-show="addr.pk">Edit private key for address: <br/>{{addr.address}}</h4>
+      </div>
+      <div class="modal-body">
+
+        <form name="setPrivateKey">
+            <div class="alert alert-danger alert-dismissable" ng-show="setPrivateKeyErrorShow">
+              Error
+            </div>
+
+            <input ng-hide="showpassword" class="form-control" ui-validate="'checkPrivateKey($value)'" type="text" ng-model="tempDecodedPK" name="privateKey">
+            <input ng-show="showpassword" class="form-control" ui-validate-watch="'privateKey'" type="password" ng-model="tempDecodedPK" name="privateKey">
+
+            <div class="label label-danger" ng-show="setPrivateKey.privateKey.$error.required && setPrivateKey.privateKey.$dirty">Key is required</div>
+            <div class="label label-danger" ng-show="setPrivateKey.$invalid && setPrivateKey.privateKey.$dirty">Private Key is not valid</div>
+      <br/>
+   <input type="checkbox" ng-model="showpassword" ng-checked="false"> Hide characters
+   </form>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="clearPK()">Close</button>
+        <button type="button" ng-disabled='setPrivateKey.$invalid' ng-click="setPrivateKeyFunction($index,addr.address,tempDecodedPK, addr)" class="btn btn-primary"><i class="fa fa-lock"></i> <i class="fa fa-plus"></i> <i class="fa fa-save"></i> Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+                                    <div class="clearfix"></div>
+                                    <div class="col-xs-4 currency-container" ng-repeat="balance in addr.balance">
+                                        <div class="currency-title" style="color:{{currency_colors[$index]}}">
+                                        {{balance.currency}}
+                                        </div>
+                                        <div class="currency-buttons">
+                                        <div class="btn-group">
+                                            <a target="_blank" href="sendform.html?addr=&from={{addr.address}}&currency={{currencies[$index].symbol}}&SimpleView=true" class="btc-tbl-btn btn btn-primary btn-xs"><i class="glyphicon glyphicon-share-alt"></i> &nbsp;Send</a>
+                                            <a target="_blank" href="sellform.html?addr=&amount={{balance.value}}&from={{addr.address}}&currency={{currencies[$index].symbol}}&action=New&SimpleView=true" class="btc-tbl-btn btn btn-success btn-xs"><i class="glyphicon glyphicon-shopping-cart"></i> &nbsp;Sell</a>
+                                        </div>
+                                        </div>
+                                        <div class="currency-value">
+                                            <button type="button" ng-click="changeCurrency()" ng-class="{dollar:showDollarValues}" class="btn btn-xs">
+                                                <span ng-hide="showDollarValues">{{(balance.value | number:8)}}</span>
+                                                <span ng-hide="!showDollarValues">{{balance.value * getCurrency(balance.currency) | currency:dollarCurrencySymbol}}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                            </div>
+            </div>
+                            <div class="row-fluid totals">
+                                    <div class="total-title"><i class="glyphicon glyphicon-star"></i> Totals</div>
+                                    <div class="col-xs-4 currency-container" ng-repeat="balance in total">
+                                        <div class="currency-title">
+                                            {{balance.currency}}
+                                        </div>
+                                        <div class="currency-value">
+                                            <button type="button" ng-click="changeCurrency()" class="btn btn-sm btn-default">
+                                                <span ng-hide="showDollarValues">{{(balance.value | number:8)}}</span>
+                                                <span ng-hide="!showDollarValues">{{balance.value  * getCurrency(balance.currency) | currency:dollarCurrencySymbol}}</span>
+                                            </button>
+                                        </div>
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -158,6 +502,31 @@
             <div class="muted credit">&copy; <a href="https://masterchain.info">Masterchain</a> Grazcoin Grimentz 2013-2014.</div>
          </div>
       </div>
+
+<div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        Welcome to our wallet. If you would like to view the user guide
+please click on the button below:
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:giveHelp()" class="btn btn-primary">Yes please, show me the user guide</a>
+        <a href="javascript:closeHelpModal()" class="btn">No thanks, take me directly to the wallet</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="slide-out-div">
+        <a class="handle" href="http://link-for-non-js-users">Content</a>
+        <h3>Feedback</h3>
+
+		<p>Leave a voice message at: <br/> <a href="http://mastercoinfoundation.uservoice.com/" target="_blank">http://mastercoinfoundation.uservoice.com/</a></p>
+
+		<p>Or - write some feedback in the Mastercoin forum: <a href="http://mastercointalk.org/" target="_blank">http://mastercointalk.org/</a></p>
+    </div>
+
    </body>
 </html>
 

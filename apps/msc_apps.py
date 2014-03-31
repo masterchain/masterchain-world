@@ -10,9 +10,9 @@
 
 import urlparse
 import os, sys
-lib_path = os.path.abspath('..')
+lib_path = os.path.abspath('../../mastercoin-tools')
 sys.path.append(lib_path)
-from msc_utils_obelisk import *
+from msc_utils_parsing import *
 
 http_status = '200 OK'
 error_not_enough_funds = 'Not enough bitcoin funds on address'

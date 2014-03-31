@@ -10,9 +10,6 @@
 
 import urlparse
 import os, sys
-lib_path = os.path.abspath('..')
-sys.path.append(lib_path)
-from msc_utils_obelisk import *
 from msc_apps import *
 
 def validateaddr_response(response_dict):

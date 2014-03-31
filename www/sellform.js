@@ -21,6 +21,7 @@ function AcceptOfferController($scope, $http) {
     $scope.blocks = 10;
     $scope.key = "";
     $scope.currency = "";
+    $scope.action = "New";
 
     $scope.keyChange = function () {
 
@@ -38,6 +39,7 @@ function AcceptOfferController($scope, $http) {
         var myURLParams = BTCUtils.getQueryStringArgs();
         //var file = 'tx/' + myURLParams['tx'] + '.json';
 	$scope.currency = myURLParams['currency'];
+	$scope.action = myURLParams['action'];
 	
 	$scope.toAddrReadOnly = ($scope.toAddress && $scope.toAddress.length > 0);
 	if (myURLParams['fee'])
@@ -46,6 +48,8 @@ function AcceptOfferController($scope, $http) {
 		$scope.amount = parseFloat(myURLParams['amount']);
 	if (myURLParams['price'])
 		$scope.price = parseFloat(myURLParams['price']);
+	if (myURLParams['action'])
+		$scope.action = parseString(myURLParams['action']);
       
     }
 
@@ -271,8 +275,9 @@ var min_buyer_fee = $('#min_buyer_fee').val();
 var fee = $('#fee').val();
 var blocks = $('#blocks').val();
 var currency = $('#currency').val();
+var action = $('#action').val();
 
-var dataToSend = { seller: from_address, amount: amount, price: price, min_buyer_fee: min_buyer_fee, fee: fee, blocks: blocks, currency: currency };
+var dataToSend = { seller: from_address, amount: amount, action: action, price: price, min_buyer_fee: min_buyer_fee, fee: fee, blocks: blocks, currency: currency };
 console.log(dataToSend);
 
 // Ajax call to /wallet/send/

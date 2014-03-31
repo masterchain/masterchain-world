@@ -5,7 +5,6 @@
     masterchain@@bitmessage.ch
     https://masterchain.info/LICENSE.txt
 */
-
 function TransactionController($scope, $http) {
     $scope.transactionInformation;
     $scope.bids;
@@ -36,7 +35,7 @@ function TransactionController($scope, $http) {
             $scope.updateReason();
         });
 
-        var bidsURL = "bids/bids-";
+        var bidsURL = "offers/offers-";
         bidsURL += myURLParams['tx'];
         bidsURL += ".json";
 

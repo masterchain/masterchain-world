@@ -34,7 +34,7 @@ BTNClientContext.GetEckey = function (sec) {
 BTNClientContext.parseScript = function (script) {
     var newScript = new Bitcoin.Script();
     var s = script.split(" ");
-    for (var i in s) {
+    for (var i = 0; i < s.length; i++) {
         if (Bitcoin.Opcode.map.hasOwnProperty(s[i])) {
             newScript.writeOp(Bitcoin.Opcode.map[s[i]]);
         } else {
