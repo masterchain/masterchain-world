@@ -175,11 +175,6 @@ function WalletController($scope, $http, $q) {
 	// Calculate pwd digest and put in storage
 	var digest = Wallet.calcPwdDigest($scope.walletPassword);
 	Wallet.StoreEncPwd(digest);
-	
-	// Calculate the wallet encryption key and keep in memory
-	/* TODO:
-	wallet_encryption_key = CryptoJS.PBKDF2("password", "masterchain_password_salt", { keySize: 512 / 32, iterations: 1000} ));
-	*/
 	$scope.walletEncKey = $scope.walletPasswordSaved;
 
 	$scope.walletPassword=$scope.walletPasswordConfirm="";
@@ -1144,8 +1139,7 @@ Wallet.wordToByteArray = function (wordArray) {
 Wallet.masterSalt = "masterchain_salt";
 
 Wallet.calcPwdDigest = function (pwd) {
-	var pwdDigest1 =
-		CryptoJS.SHA256(CryptoJS.SHA256(Wallet.masterSalt + pwd));	
+        var pwdDigest1 = CryptoJS.PBKDF2(pwd, "masterchain_password_salt", { keySize: 512 / 32, iterations: 750} );
 	// Convert to base58
 	var byteArray = Wallet.wordToByteArray(pwdDigest1.words);
 	var strep = Bitcoin.Base58.encode(byteArray);
