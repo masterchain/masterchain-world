@@ -41,9 +41,10 @@ function TransactionController($scope, $http) {
 
                 toAddressArray[i] = { "address": p[0], "value": p[1] };
             }
-
             console.log(toAddressArray);
             data[0].to_address = toAddressArray;
+            var fromAddr = data[0].from_address;
+            data[0].from_address = fromAddr.split(";",1)[0]
             $scope.transactionInformation = data[0];
             $scope.setDefaults();
         });
