@@ -93,6 +93,9 @@ function AdressController($scope, $http) {
         // parse addr from url parameters
 	var myURLParams = BTCUtils.getQueryStringArgs();
 	$scope.theAddress = myURLParams['addr'];
+	if (!BTCUtils.isAddress($scope.theAddress)) {
+		$scope.theAddress = "invalid";
+	}
 	$('#qrcode').qrcode({
 		width: 130,
 		height: 130,

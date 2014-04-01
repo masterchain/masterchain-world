@@ -42,3 +42,13 @@ BTCUtils.getQueryStringArgs = function () {
 	}
 	return args;
 }
+
+BTCUtils.isAddress = function(adr) {
+    var re = /^[13][1-9A-HJ-NP-Za-km-z]{26,33}$/;
+    return re.test(adr);
+}
+
+BTCUtils.isTxId = function(txid) {
+    var re = /^[0-9a-fA-F]{64}$/;
+    return re.test(txid);
+}
