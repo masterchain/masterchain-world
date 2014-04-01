@@ -10,6 +10,7 @@ function NavigationController($scope, $http) {
     $scope.values = {};
 
     var myURLParams = BTCUtils.getQueryStringArgs();
+    var url = BTCUtils.getUrl();
     var title = myURLParams['title'].toString();
     var currency = myURLParams['currency'].toString();
     var filter_caption = (myURLParams['filter'] && myURLParams['filter'].length > 0)? " " + myURLParams['filter'] : "";
@@ -27,6 +28,9 @@ function NavigationController($scope, $http) {
         $http.get('values.json', {}).success(function (data, status, headers, config) {
            $scope.values = data;
 	   angular.forEach($scope.values, function(value, key) {
+            // Prepare same url with a different currency
+            $scope.values[key].newUrl=BTCUtils.replaceCurrency(url, value.currency);
+            console.log($scope.values[key].newUrl);
 	    if (value.currency==$scope.currency) {
 		$scope.values[key].selected="selected";
 		var pages = value.pages;

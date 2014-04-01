@@ -13,7 +13,7 @@
                      <ul class="nav navbar-nav navbar-right">
                         <li class="c-visible-xs"><a href="wallet.html">Wallet</a></li>
                         <li><a href="index.html?currency={{currency}}">Recent</a></li>
-                        <li><a href="index.html?currency={{currency}}&filter=sell">Orderbook</a></li>
+                        <li><a href="index.html?filter=sell&currency={{currency}}">Orderbook</a></li>
                         <li><a href="About.html">Info</a></li>
                         <li>
                            <a class="searchLI">

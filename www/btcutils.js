@@ -11,6 +11,10 @@ function BTCUtils() {
 
 ///// Public Methods
 
+BTCUtils.getUrl = function () {
+        var url = new String(location);
+        return url;
+}
 
 BTCUtils.getQueryStringArgs = function () {
 	//get query string without the initial ?
@@ -51,4 +55,10 @@ BTCUtils.isAddress = function(adr) {
 BTCUtils.isTxId = function(txid) {
     var re = /^[0-9a-fA-F]{64}$/;
     return re.test(txid);
+}
+
+BTCUtils.replaceCurrency = function(url, c) {
+    var oldUrl = url
+    var newUrl = oldUrl.replace(/(currency=).*(&)?/,'$1' + c + '$2');
+    return newUrl;
 }

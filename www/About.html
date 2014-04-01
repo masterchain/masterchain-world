@@ -65,7 +65,7 @@
                      <ul class="nav navbar-nav navbar-right">
                         <li class="c-visible-xs"><a href="wallet.html">Wallet</a></li>
                         <li><a href="index.html?currency={{currency}}">Recent</a></li>
-                        <li><a href="index.html?currency={{currency}}&filter=sell">Orderbook</a></li>
+                        <li><a href="index.html?filter=sell&currency={{currency}}">Orderbook</a></li>
                         <li><a href="About.html">Info</a></li>
                         <li>
                            <a class="searchLI">
@@ -94,7 +94,7 @@
                   <div class="left_bar jumbotron col-sm-3 col-sm-pull-9 col-md-2 col-md-pull-10">
                      <nav>
                         <div class="navItems col-xs-6 col-sm-12 no-padding" ng-repeat="val in values">
-                           <a href="index.html?currency={{val.currency}}" class="panel-link">
+                           <a href="{{val.newUrl}}" class="panel-link">
                               <div class="panel panel-default {{val.selected}}">
                                  <div class="panel-heading">
                                     <img ng-src="img/{{val.trend}}Icon.png"/> {{val.name}}

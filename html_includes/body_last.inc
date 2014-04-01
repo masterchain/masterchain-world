@@ -1,7 +1,7 @@
                   <div class="left_bar jumbotron col-sm-3 col-sm-pull-9 col-md-2 col-md-pull-10">
                      <nav>
                         <div class="navItems col-xs-6 col-sm-12 no-padding" ng-repeat="val in values">
-                           <a href="index.html?currency={{val.currency}}" class="panel-link">
+                           <a href="{{val.newUrl}}" class="panel-link">
                               <div class="panel panel-default {{val.selected}}">
                                  <div class="panel-heading">
                                     <img ng-src="img/{{val.trend}}Icon.png"/> {{val.name}}
