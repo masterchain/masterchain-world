@@ -30,7 +30,7 @@ function NavigationController($scope, $http) {
 	   angular.forEach($scope.values, function(value, key) {
             // Prepare same url with a different currency
             $scope.values[key].newUrl=BTCUtils.replaceCurrency(url, value.currency);
-            console.log($scope.values[key].newUrl);
+            //console.log($scope.values[key].newUrl);
 	    if (value.currency==$scope.currency) {
 		$scope.values[key].selected="selected";
 		var pages = value.pages;

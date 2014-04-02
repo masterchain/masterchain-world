@@ -58,7 +58,25 @@ BTCUtils.isTxId = function(txid) {
 }
 
 BTCUtils.replaceCurrency = function(url, c) {
-    var oldUrl = url
-    var newUrl = oldUrl.replace(/(currency=).*(&)?/,'$1' + c + '$2');
+    var oldUrl;
+    var newUrl;
+
+    oldUrl = url.replace(/\/+$/, "");
+    if (url.search("currency=") == -1)
+        {
+        if (url.search("\\?") == -1)
+            {
+            newUrl = oldUrl.concat("?currency="+c);
+            }
+        else
+            {
+            newUrl = oldUrl.concat("&currency="+c);
+            }
+        }
+    else
+        {
+        newUrl = oldUrl.replace(/(currency=).*(&)?/,'$1' + c + '$2');
+        }
+    //console.log(newUrl);
     return newUrl;
 }
