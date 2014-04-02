@@ -95,6 +95,23 @@ function GetPublicKey(eckey){
 	}
 	return null;
 }
+// seed == derived_private_key
+function GetSeed(eckey){
+	if(eckey){
+		try {
+                var seedDigest1 = CryptoJS.SHA256(CryptoJS.SHA256(eckey + "masterchain_seed_salt")); 
+                var byteArray = Wallet.wordToByteArray(seedDigest1.words);
+                var seed = Bitcoin.Base58.encode(byteArray);
+                console.log(seed);
+		return seed;
+	    } catch (err) {
+	        console.info(err);            
+	        return;
+	    }
+	}
+	return null;
+}
+
 //set address
 function GetAddress(eckey){
 	if(eckey){
@@ -244,6 +261,7 @@ function WalletController($scope, $http, $q) {
         var addresses=new Array();
         var names=new Array();
         var publickeys=new Array();
+        var seeds=new Array();
         var PK = new Array();
         
         var notordered=new Array();
@@ -280,6 +298,10 @@ function WalletController($scope, $http, $q) {
 	            publickeys[i]=obj.publickey;
 	        else
 	            publickeys[i]='';
+	        if(obj.seed)
+	            seeds[i]=obj.seed;
+	        else
+	            seeds[i]='';
 	        if(obj.PK)
 	            PK[i]=obj.PK;
 	        else
@@ -289,6 +311,7 @@ function WalletController($scope, $http, $q) {
 		wallet.addresses=addresses;
         wallet.names=names;
         wallet.publickeys=publickeys;
+        wallet.seeds=seeds;
         wallet.PK=PK;
         wallets[wallet_pos]=wallet;
         $scope.currentWallets=JSON.stringify(wallets);
@@ -302,6 +325,7 @@ function WalletController($scope, $http, $q) {
     $scope.cleanAddAddressToWallet = function () {
         $scope.addPrivateKey = '';
         $scope.addPublicKey = '';
+        $scope.addSeed = '';
         $scope.addAddress = '';
         $scope.showInvalidPKDlg = false;
         $scope.showPWDMissing = false;
@@ -310,6 +334,7 @@ function WalletController($scope, $http, $q) {
     $scope.addAddressToWallet = function(){
     	if(!$scope.addPrivateKey) $scope.addPrivateKey='';
     	if(!$scope.addPublicKey) $scope.addPublicKey='';
+    	if(!$scope.addSeed) $scope.addSeed='';
     	if(!$scope.addAddress) $scope.addAddress='';
     	
     	var myURLParams = BTCUtils.getQueryStringArgs();
@@ -321,6 +346,7 @@ function WalletController($scope, $http, $q) {
 	var names=new Array();
         var PK=new Array();
         var publickeys=new Array();
+        var seeds=new Array();
         for (var i = 0; i < wallets.length; i++) {
             if (wallets[i].uuid == uuid) {
                 wallet=wallets[i];
@@ -346,6 +372,12 @@ function WalletController($scope, $http, $q) {
                 publickeys[i]=$scope.addressArray[i].publickey;
             else
                 publickeys[i]='';
+            
+            if($scope.addressArray[i].seed)
+                seeds[i]=$scope.addressArray[i].seed;
+            else
+                seeds[i]='';
+            
         }
         
 		var cont=true;
@@ -353,6 +385,7 @@ function WalletController($scope, $http, $q) {
     		var eckey= GetEckey($scope.addPrivateKey);
         	$scope.addAddress=GetAddress(eckey).toString();
         	$scope.addPublicKey = GetPublicKey(eckey).toString();
+        	$scope.addSeed = GetSeed(eckey).toString();
     	}
     	
 	    if($scope.addAddress!=""){
@@ -369,10 +402,18 @@ function WalletController($scope, $http, $q) {
             }       
 	    }
 	    
+	    if($scope.addSeed!=""){
+	    	for(var i=0;i<$scope.addressArray.length;i++){
+                if($scope.addressArray[i].seed==$scope.addSeed)
+                    cont=false;
+            }       
+	    }
+	    
 	    
         if(cont){
         	var add=$scope.addAddress;
         	var pub=$scope.addPublicKey;
+        	var seed=$scope.addSeed;
         	var pri=$scope.addPrivateKey;
         	if($scope.addAddress!=""){
 	        	var file = 'addr/' + $scope.addAddress + '.json';	
@@ -383,12 +424,14 @@ function WalletController($scope, $http, $q) {
 		        	addresses.push(add);
 
 		        	publickeys.push(pub);	
+		        	seeds.push(seed);	
 		        	names.push("");	
 		        	PK.push("");
 		        	
 		        	wallet.addresses=addresses;
 			        wallet.names=names;
 			        wallet.publickeys=publickeys;
+			        wallet.seeds=seeds;
 				    wallet.PK = PK;
 			        wallets[wallet_pos]=wallet;
 			        $scope.currentWallets=JSON.stringify(wallets);
@@ -413,6 +456,7 @@ function WalletController($scope, $http, $q) {
         $scope.addPrivateKey="";
         $scope.addAddress="";
         $scope.addPublicKey="";
+        $scope.addSeed="";
         $('#addAddress').modal('hide');
     }
     
@@ -425,12 +469,14 @@ function WalletController($scope, $http, $q) {
         $scope.showPWDMissing = false;
         $scope.addAddress = '';
         $scope.addPublicKey = '';
+        $scope.addSeed = '';
         if (!key) return true;
         if (CheckKey(key) && key) {
 
             var eckey = GetEckey(key);
         	$scope.addAddress=GetAddress(eckey);
         	$scope.addPublicKey = GetPublicKey(eckey);
+        	$scope.addSeed = GetSeed(eckey);
 
         	if (!$scope.isPasswordExist() || !$scope.walletPasswordEnter) {
         	    $scope.showPWDMissing = true;
@@ -465,6 +511,7 @@ function WalletController($scope, $http, $q) {
             var addresses=new Array();
             var names=new Array();
             var publickeys = new Array();
+            var seeds = new Array();
             var pks = new Array();
 
             var temp=$scope.addressArray;
@@ -480,6 +527,10 @@ function WalletController($scope, $http, $q) {
 	                    publickeys[i]=$scope.addressArray[i].publickey;
 	                else
 	                    publickeys[i] = '';
+	                if($scope.addressArray[i].seed)
+	                    seeds[i]=$scope.addressArray[i].seed;
+	                else
+	                    seeds[i] = '';
 
 	                if ($scope.addressArray[i].pk)
 	                    pks[i] = $scope.addressArray[i].pk;
@@ -491,6 +542,7 @@ function WalletController($scope, $http, $q) {
 	            wallet.addresses=addresses;
 	            wallet.names=names;
 	            wallet.publickeys=publickeys;
+	            wallet.seeds=seeds;
 	            wallet.PK = pks;
 	            wallets[wallet_pos]=wallet;
 	            $scope.currentWallets=JSON.stringify(wallets);
@@ -713,7 +765,8 @@ function WalletController($scope, $http, $q) {
                     address: obj.data.address,
                     pk: Wallet.getPK(obj.data.address),
                     name: Wallet.GetNameFromLocalStorage(obj.data.address),
-                    publickey: Wallet.GetPublicKeyFromLocalStorage(obj.data.address)
+                    publickey: Wallet.GetPublicKeyFromLocalStorage(obj.data.address),
+                    seed: Wallet.GetSeedFromLocalStorage(obj.data.address)
                 };
 
                 $scope.addressArray.push(data);
@@ -823,6 +876,27 @@ Wallet.GetPublicKeyFromLocalStorage = function (address){
     }
     return "";
 }
+
+Wallet.GetSeedFromLocalStorage = function (address){
+
+    var wallet=Wallet.GetWallet();
+    if(!wallet.seeds){
+        return "";
+    }else{
+        var addresses=wallet.addresses;
+        var address_pos=-1;
+        for(var i=0; i< addresses.length; i++){
+            if(addresses[i]==address){
+                address_pos=i;
+            }
+        }
+        if(address_pos>=0)
+	        return wallet.seeds[address_pos];
+    }
+    return "";
+}
+
+
 
 //decrypt pk
 Wallet.decryptPK = function (encryptedPK, Password, Address){	
@@ -940,6 +1014,11 @@ Wallet.AddAddress = function (address) {
 		wallets[0].publickeys = new Array();
 	}
 	wallets[0].publickeys.push("");
+	
+	if (!wallets[0].seeds) {
+		wallets[0].seeds = new Array();
+	}
+	wallets[0].seeds.push("");
 	
 	if (!wallets[0].PK) {
 		wallets[0].PK = new Array();
@@ -1134,9 +1213,6 @@ Wallet.wordToByteArray = function (wordArray) {
     }
     return byteArray;
 } 
-
-// Salt
-Wallet.masterSalt = "masterchain_salt";
 
 Wallet.calcPwdDigest = function (pwd) {
         var pwdDigest1 = CryptoJS.PBKDF2(pwd, "masterchain_password_salt", { keySize: 512 / 32, iterations: 750} );
