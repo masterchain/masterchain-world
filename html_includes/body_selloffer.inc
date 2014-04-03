@@ -27,7 +27,7 @@
                                         </tr>
                                         <tr>
                                             <td>Price per coin</td>
-                                            <td><span class="pull-left">{{transactionInformation.formatted_price_per_coin}} &#3647;/{{currency}}</span>
+                                            <td><span class="pull-left">{{transactionInformation.formatted_price_per_coin}} &#3647;/coin</span>
                                                 <button type="button" ng-click="AcceptClick()" class="pull-right btn btn-success btn-xs">ACCEPT</button></td>
                                         </tr>
                                         <tr>
