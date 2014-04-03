@@ -85,7 +85,7 @@ def prepare_accept_tx_for_signing(buyer, amount, tx_hash, min_btc_fee=0.0001):
     satoshi_amount=to_satoshi(amount)
 
     # read json of orig tx to get tx details
-    sell_offer_tx_dict_list=load_dict_from_file('../tx/'+tx_hash+'.json', all_list=True)
+    sell_offer_tx_dict_list=load_dict_from_file('../www/tx/'+tx_hash+'.json', all_list=True)
     sell_offer_tx_dict=sell_offer_tx_dict_list[0]
     # sanity check
     try:
