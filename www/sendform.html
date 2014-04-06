@@ -129,71 +129,12 @@
                             	<a popover data-trigger="hover" data-html="true" data-content="Switch to advanced view" data-placement="left" ng-show="simpleView" ng-click="simpleView=0" class="pull-right btn btn-sm">to Advanced View</a>
                             	<a popover data-trigger="hover" data-html="true" data-content="Switch to simple view" data-placement="left" ng-hide="simpleView" ng-click="simpleView=1" class="pull-right btn btn-sm">to Simple View</a>
                                 <h2>Send coins</h2>
-
+								
                                 <div class="input string optional" id="fromAddressOrPublicKeyDiv">
-                                    <!-- <div class="ui-widget">-->
 
                                     <label class="string optional" for="publicKey">Sender address or public key</label>
-                                    <div class="input-group">
-                                        <span class="input-group-btn">
-                                            <button data-toggle="modal" data-target="#selectSenderAddress" class="btn btn-success" popover data-trigger="hover" data-html="true" data-container="body" data-content="Load Address from Wallet" data-placement="right"><i class="glyphicon glyphicon-list"></i></button>
-                                        </span>
-                                        <input type="text" class="string optional form-control" ng-model="senderAddress" />
-                                        <span class="input-group-btn">
-                                            <button id="verifyButton" class="btn btn-primary">Verify</button>
-                                        </span>
-                                    </div>
-                                    <div id="verify">
-                                        <div id="verifyMessage" class="label"></div>
-                                        <img id="verifyLoader" class="verifyLoader loader"
-                                            src="img/ajax_loader.gif" />
-                                    </div>
-                                    <!-- select class="select optional form-control form-control30px combobox"
-                                        id="fromAddressOrPublicKey" name="fromAddressOrPublicKey">
-
-                                        < ng-model="transactionInformation.to_address"
-                                                ng-change="comboBoxValueChange(this)">
-
-                                    </select>
-                                    </div>
-                                        <button id="toggle">Show underlying select</button>-->
-
+									<set-address ></set-address>
                                 </div>
-
-<div class="modal fade" id="selectSenderAddress" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title">Select address from your Wallet</h4>
-      </div>
-      <div class="modal-body">
-        <table  class="table addressList table-responsive table-striped">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Address</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr class="row-fluid addressList" ng-repeat="addr in addressArray">
-            <td>
-                <a class="btn btn-primary" ng-show="addr.name" href ng-click="setSenderAddress(addr.address)">{{addr.name}}</a>
-            </td><td>
-                <a class="btn btn-primary" href ng-click="setSenderAddress(addr.address)">{{addr.address}}</a>
-            </td>
-            </a>
-        </tr>
-        </tbody>
-        </table>
-
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
 
 
                                 <div class="input string optional">
@@ -243,136 +184,10 @@
 
                             </div>
 
-                            <!--AFTER RESPONSE-->
 
-                            <div class="col-md-10" id="createRawResponseForm" style="display: none;">
+							<after-response></after-response>
 
-                                <div ng-hide="simpleView">
-                                <div class="input string optional">
-                                    <label class="string optional" for="sourceScript">Source script</label>
-                                    <textarea readonly="readonly" class="form-control textareaScroll" rows="3" id="sourceScript"></textarea>
-
-                                </div>
-                                <div class="input string optional">
-                                    <label class="string optional" for="transactionBBE">Transaction</label>
-                                    <textarea readonly="readonly" class="form-control textareaScroll" rows="6" id="transactionBBE"></textarea>
-
-                                    <div id="rawJsonRadio" class="btn-group" data-toggle="buttons">
-                                        <label id="RawRadioBtn" class="btn btn-primary active">
-                                            <input type="radio" name="options">
-                                            Raw
-                                        </label>
-                                        <label id="JsonRadioBtn" class="btn btn-primary">
-                                            <input type="radio" name="options">
-                                            Json
-                                        </label>
-                                    </div>
-
-                                </div>
-                                </div>
-                                <div ng-show="simpleView" class="alert alert-success">
-                                    <i class="glyphicon glyphicon-ok"></i> Everything went well
-                                </div>
-
-                                <div class="input string optional">
-                                    <label class="string optional" for="privateKey">Private key</label>
-                                    <div ng-show="isPKInLocalStorage" class="input-group">
-                                        <span class="input-group-btn">
-                                            <button data-toggle="modal" data-target="#unlockWallet" class="btn btn-success" popover data-trigger="hover" data-html="true" data-container="body" data-content="Load Private Key from Wallet" data-placement="right"><img src="img/loadFromWallet.png" alt="Load from wallet" /></button>
-                                        </span>
-                                        <input class="string optional form-control" id="privateKey" ng-show="showpassword" ng-model="key"  type="text">
-                                        <input class="string optional form-control" id="privateKey" ng-hide="showpassword" ng-model="key"  type="password">
-                                    </div>
-                                    <input ng-hide="isPKInLocalStorage || !showpassword" class="string optional form-control" id="privateKey" ng-model="key" ng-change="keyChange()" type="text">
-                                    <input ng-hide="isPKInLocalStorage || showpassword" class="string optional form-control" id="privateKey" ng-model="key" ng-change="keyChange()" type="password">
-                                    <input type="checkbox" ng-model="showpassword" ng-checked="false"> Show characters
-                                    <span class="invalidKey label label-danger">Invalid key</span>
-                                </div>
-
-<div class="modal fade" id="unlockWallet" role="dialog">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Enter password of Wallet</h4>
-      </div>
-      <div class="modal-body">
-
-        <form name="unlockWallet">
-            <div class="alert alert-danger alert-dismissable" ng-show="unlockWalletErrorShow">
-              The <strong>password</strong> is not correct
-            </div>
-            <input placeholder="Password" class="form-control" ng-model="walletPasswordEnter" ng-pattern="/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]*$/" type="password" name="walletPasswordEnter" ng-minlength="8" required/>
-            <div class="label label-danger" ng-show="unlockWallet.walletPasswordEnter.$error.required && unlockWallet.walletPasswordEnter.$dirty">Password is required</div>
-   <div class="label label-danger" ng-show="!unlockWallet.walletPasswordEnter.$error.required && (unlockWallet.walletPasswordEnter.$error.minlength || unlockWallet.walletPasswordEnter.$error.maxlength) && unlockWallet.walletPasswordEnter.$dirty">Password is not secure enough (the length is less than 6 characters).</div>
-   <div class="label label-danger" ng-show="!unlockWallet.walletPasswordEnter.$error.required && !unlockWallet.walletPasswordEnter.$error.minlength && !unlockWallet.walletPasswordEnter.$error.maxlength && unlockWallet.walletPasswordEnter.$error.pattern && unlockWallet.walletPasswordEnter.$dirty">Password contains illegal characters, must have letters, numbers and !@#$%^&*()_+-=[]{};:\|,.<>/?</div>
-   </form>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" ng-disabled='unlockWallet.$invalid' ng-click="validateWalletPassword()" class="btn btn-primary">OK</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-                                <br />
-                                <div>
-                                    <button class="btn btn-primary btnMargin"
-                                        id="reSign" ng-disabled="!key.length">
-                                        (re)Sign
-                                    </button>
-                                    <a ng-hide="simpleView" popover data-trigger="hover" data-html="true" data-content="Sign the transaction offline (advanced security feature.)" data-placement="right" class="btn btn-info btnMargin" href="offlinesign.html" target="_blank">
-                                    <i class="glyphicon glyphicon-log-in"></i> Sign offline
-                                    </a>
-                                    <img id="reSignLoader" src="img/ajax_loader.gif" class="loader" />
-                                </div>
-
-                            </div>
-
-
-                            <div class="col-md-10" id="reSignClickedForm" style="display: none;">
-                                <div ng-hide="simpleView">
-                                <div class="input string optional">
-                                    <label class="string optional" for="signedTransactionBBE">Transaction</label>
-                                    <textarea class="form-control textareaScroll" rows="6" id="signedTransactionBBE"></textarea>
-									<span class="invalidTransaction redText">Invalid transaction</span>
-
-									<div id="rawJsonRadioSigned" class="btn-group" data-toggle="buttons">
-										<label id="RawRadioBtnSigned" class="btn btn-primary active">
-											<input type="radio" name="options">
-											Raw
-										</label>
-										<label id="JsonRadioBtnSigned" class="btn btn-primary ">
-											<input type="radio" name="options">
-											Json
-										</label>
-                                    </div>
-                                </div>
-                                </div>
-
-                                <div ng-show="simpleView" class="alert alert-success">
-                                    <i class="glyphicon glyphicon-ok"></i> All is prepared to Send
-                                </div>
-
-                                <div>
-                                    <button class="btn btn-primary btnMargin"
-                                        id="send">
-                                        Send
-                                    </button>
-                                    <p id="sendMessage"  class="verifySendStatus"></p>
-                                    <img id="sendLoader"
-                                        src="img/ajax_loader.gif"
-                                        class="loader" />
-                                </div>
-								<div id="sendHyperlink">
-								    Check transaction: <a id="sendLink" href="#">Hyperlink</a>
-                                </div>
-                               <p></p>
-                                <p></p>
-
-                            </div>
+                            <send-part></send-part>
 
                      </div>
                   </div>
@@ -405,6 +220,7 @@
             <div class="muted credit">&copy; <a href="https://masterchain.info">Masterchain</a> Grazcoin Grimentz 2013-2014.</div>
          </div>
       </div>
+	  <private-key-error></private-key-error>
    </body>
 </html>
 

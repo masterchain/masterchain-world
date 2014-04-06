@@ -1,0 +1,13 @@
+.modal-body {
+  overflow: hidden;
+}
+table.addressList {
+  overflow: hidden;
+  width: auto;
+  min-height: 100%;
+  max-width: 100%;
+  border: none;
+}
+table.addressList td a {
+  padding: 4px;
+}

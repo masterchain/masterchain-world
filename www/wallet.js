@@ -120,7 +120,7 @@ function GetAddress(eckey){
 	    var addr = new Bitcoin.Address(hash160);
 	    var PUBLIC_KEY_VERSION = 0;
 	    addr.version = PUBLIC_KEY_VERSION;
-		return addr;
+		return addr.toString();
 	}
 	return '';
 }
@@ -235,6 +235,12 @@ function WalletController($scope, $http, $q) {
             $scope.setPrivateKeyErrorShow = true;
             return;
         }
+
+        var pkAddress = $scope.getAddressFromPK(pk);
+        if (pkAddress != address) {
+            //bootbox.alert("private key oes not match adress");
+            $('#privateKeyError').modal('show');
+        };
 
         var encPK = Wallet.encPK(pk, $scope.walletPasswordEnter);
         addrObj.pk = encPK;
@@ -381,11 +387,16 @@ function WalletController($scope, $http, $q) {
         }
         
 		var cont=true;
-		if($scope.addPrivateKey!=""){
-    		var eckey= GetEckey($scope.addPrivateKey);
-        	$scope.addAddress=GetAddress(eckey).toString();
-        	$scope.addPublicKey = GetPublicKey(eckey).toString();
-        	$scope.addSeed = GetSeed(eckey).toString();
+		if ($scope.addPrivateKey != "") {
+		    if ($scope.controlPrivateKey($scope.addPrivateKey)) {
+		        var eckey = GetEckey($scope.addPrivateKey);
+		        $scope.addAddress = GetAddress(eckey).toString();
+		        $scope.addPublicKey = GetPublicKey(eckey).toString();
+		        $scope.addSeed = GetSeed(eckey).toString();
+		    }
+		    else {
+		        return;
+		    }
     	}
     	
 	    if($scope.addAddress!=""){
@@ -487,6 +498,24 @@ function WalletController($scope, $http, $q) {
             $scope.showInvalidPKDlg = true;
         	return false;
         }
+    }
+
+    $scope.controlPrivateKey = function (pk) {
+        var eckey = GetEckey(pk);
+        var address = GetAddress(eckey);
+        if (!address || address == '') {
+            //error
+
+            return false;
+        }
+        return true;
+    }
+
+    $scope.getAddressFromPK = function (pk) {
+        var eckey = GetEckey(pk);
+        var address = GetAddress(eckey);
+        
+        return address;
     }
     
     $scope.checkPrivateKey=function(key){
@@ -1303,6 +1332,89 @@ Wallet.getPK = function (address) {
 	}
 	return wallet.PK[address_pos];
 }
+
+//PK 
+Wallet.setPubK = function (address, PK) {
+    if (Wallet.supportsStorage()) {
+        var wallet = {};
+        var myURLParams = BTCUtils.getQueryStringArgs();
+        var uuid = myURLParams['uuid'];
+        var wallet_pos = 0;
+        if (localStorage[Wallet.StorageKey]) {
+            var wallets = JSON.parse(localStorage[Wallet.StorageKey]);
+
+            for (var i = 0; i < wallets.length; i++) {
+                if (wallets[i].uuid == uuid) {
+                    wallet = wallets[i];
+                    wallet_pos = i;
+                }
+            }
+            //Returning the first wallet
+            if (!uuid && wallets.length > 0)
+                wallet = wallets[0];
+
+            var addresses = wallet.addresses;
+            var address_pos = 0;
+            for (var i = 0; i < addresses.length; i++) {
+                if (addresses[i] == address) {
+                    address_pos = i;
+
+                }
+            }
+            //check public keys   
+            if (!wallet.publickeys) {
+                wallet.publickeys = new Array();
+                for (var i = 0; i < addresses.length; i++) {
+                    wallet.publickeys[i] = "";
+                }
+            }
+            wallet.publickeys[address_pos] = PK;
+            wallets[wallet_pos] = wallet;
+            localStorage[Wallet.StorageKey] = JSON.stringify(wallets);
+        }
+
+
+    }
+}
+
+Wallet.getPubK = function (address) {
+    if (!Wallet.supportsStorage()) {
+        return null
+    }
+    var wallet = {};
+    var myURLParams = BTCUtils.getQueryStringArgs();
+    var uuid = myURLParams['uuid'];
+    var wallet_pos = 0;
+    if (!localStorage[Wallet.StorageKey]) {
+        return null;
+    }
+    var wallets = JSON.parse(localStorage[Wallet.StorageKey]);
+
+    for (var i = 0; i < wallets.length; i++) {
+        if (wallets[i].uuid == uuid) {
+            wallet = wallets[i];
+            wallet_pos = i;
+        }
+    }
+    //Returning the first wallet
+    if (!uuid && wallets.length > 0)
+        wallet = wallets[0];
+
+    var addresses = wallet.addresses;
+    var address_pos = 0;
+    for (var i = 0; i < addresses.length; i++) {
+        if (addresses[i] == address) {
+            address_pos = i;
+
+        }
+    }
+    //check Public Keys   
+    if (!wallet.publickeys || wallet.publickeys.length <= address_pos) {
+        return null;
+    }
+    return wallet.publickeys[address_pos];
+}
+
 
 Wallet.encPK = function (PK, PWD) {
     var encrypted = CryptoJS.AES.encrypt(PK, PWD);

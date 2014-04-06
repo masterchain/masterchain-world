@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 
 <!--
     Copyright Masterchain Grazcoin Grimentz 2013-2014
@@ -45,6 +45,7 @@
          var myApp = angular.module('myApp', ['truncate','ui.sortable']);
       </script>
       <script src="js/bootstrap.min.js"></script>
+      <script src="js/bootbox.min.js"></script>
       <script src="js/match.js"></script>
       <script src="js/base_directives.js"></script>
       <script src="js/validate.js"></script>
@@ -219,7 +220,11 @@
          <div class="or"></div>
          <div class="form-group">
 			<label for="addPrivateKey">Private-key</label>
-            <input placeholder="Private-key" class="form-control" ui-validate="'checkPrivateKeyAddAddress($value)'" ng-model="addPrivateKey" ng-required="!addAddress && !addPublicKey" ng-pattern="/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]*$/" type="text" name="addPrivateKey" ng-required=''/>
+             <input ng-show="showpassword" placeholder="Private-key" class="form-control" ui-validate="'checkPrivateKeyAddAddress($value)'"
+                    ng-model="addPrivateKey" ng-required="!addAddress && !addPublicKey" ng-pattern="/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]*$/" type="text" name="addPrivateKey" ng-required='' />
+             <input ng-hide="showpassword" placeholder="Private-key" class="form-control" ui-validate-watch="'addPrivateKey'" 
+                    ng-model="addPrivateKey" ng-required="!addAddress && !addPublicKey" ng-pattern="/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:\\|,.<>\/?]*$/" type="password" name="addPrivateKey" ng-required=''>
+             <input type="checkbox" ng-model="showpassword" ng-checked="false"> Show characters
             <div class="label label-danger" ng-show="showInvalidPKDlg">Private Key is not valid</div>
             <div class="label label-info" ng-show="showPWDMissing">Wallet's password is missing. The private key won't be saved<br /> as the password is needed to encrypt it.</div>
          </div>
@@ -422,7 +427,6 @@
 
             <div class="label label-danger" ng-show="setPrivateKey.privateKey.$error.required && setPrivateKey.privateKey.$dirty">Key is required</div>
             <div class="label label-danger" ng-show="setPrivateKey.$invalid && setPrivateKey.privateKey.$dirty">Private Key is not valid</div>
-      <br/>
    <input type="checkbox" ng-model="showpassword" ng-checked="false"> Hide characters
    </form>
 
@@ -527,7 +531,7 @@ please click on the button below:
 
 		<p>Or - write some feedback in the Mastercoin forum: <a href="http://mastercointalk.org/" target="_blank">http://mastercointalk.org/</a></p>
     </div>
-
+       <private-key-error></private-key-error>
    </body>
 </html>
 

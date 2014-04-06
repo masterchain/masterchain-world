@@ -24,7 +24,7 @@ function AcceptOfferController($scope, $http) {
     var myURLParams = BTCUtils.getQueryStringArgs();
     
     $scope.simpleView=myURLParams['SimpleView']=="true";
-    $scope.senderAddress = myURLParams['from'];
+    $scope.Address = myURLParams['from'];
     
     var wallet = Wallet.GetWallet();
     $scope.addressArray=new Array();
@@ -33,18 +33,18 @@ function AcceptOfferController($scope, $http) {
             $scope.addressArray[i]={"address":wallet.addresses[i],"name":wallet.names[i]};
         }
 
-    if ($scope.senderAddress) {
-        if (wallet.addresses.indexOf($scope.senderAddress) == -1) {
-    	    $scope.addressArray.splice(0, 0, {"address":$scope.senderAddress,"name":""});
+    if ($scope.Address) {
+        if (wallet.addresses.indexOf($scope.Address) == -1) {
+    	    $scope.addressArray.splice(0, 0, {"address":$scope.Address,"name":""});
         }
     }else{
         if($scope.addressArray.length>0)
-            $scope.senderAddress=$scope.addressArray[0].address;
+            $scope.Address=$scope.addressArray[0].address;
     }
 
-    $scope.setSenderAddress = function(address){
-        $scope.senderAddress=address;
-        $('#selectSenderAddress').modal('hide');
+    $scope.setAddress = function(addr){
+        $scope.Address=addr;
+        $('#selectAddress').modal('hide');
     }
     
     //private key
@@ -105,6 +105,67 @@ function AcceptOfferController($scope, $http) {
     }
     
     $('.invalidKey').hide();
+    
+    $scope.testFunction = function(){
+	    alert('ciao');
+    }
+    
+    $scope.verifyButton = function () {
+        $('#verifyMessage').hide();
+        $('#verifyLoader').show();
+
+        //If returned ok then add address to history
+        if (BTNClientContext.Signing.Verify()) {
+            BTNClientContext.Signing.addAddressToHistory();
+
+            console.log('added to history');
+        }
+        else {
+            console.log('not verified and not ok');
+        }
+
+        $('#verifyLoader').hide();
+    }
+    $scope.reSign = function () {
+        $('.invalidKey').hide();
+        $('.invalidTransaction').hide();
+
+        $('#reSignLoader').show();
+        try {
+            BTNClientContext.Signing.ReSignTransaction();
+        }
+        catch (e) {
+            console.log(e);
+            $('.invalidKey').show();
+            $('.invalidTransaction').show();
+
+
+            //If the key is invalid the resigned transaction form is hidden again
+            $('#reSignClickedForm').hide();
+
+        }
+        $('#reSignLoader').hide();
+    }
+    $scope.send = function () {
+        $('#sendLoader').addClass('showUntilAjax');
+        $('#sendLoader').addClass('show3sec');
+        var sendLoaderInterval = setInterval(function () {
+            $('#sendLoader').removeClass('show3sec');
+            clearInterval(sendLoaderInterval);
+        }, 3000);
+        //BTNClientContext.Signing.SendTransaction();
+        BTNClientContext.txSend();
+    }
+    $scope.controlPrivateKey = function(pk){
+	    var eckey= GetEckey(pk);
+    	var address=GetAddress(eckey);
+    	if(address==''){
+	    	//error
+	    	$('#privateKeyError').modal('show');
+			return false;
+    	}
+    	return true;
+    }
 }
 
 
@@ -167,7 +228,7 @@ BTNClientContext.Signing.ConvertJSON = function (signedTransaction) {
 
 BTNClientContext.Signing.Verify = function () {
     console.log("verify function");
-    var from_addr = angular.element($('.AcceptOfferController')).scope().senderAddress;
+    var from_addr = angular.element($('.AcceptOfferController')).scope().Address;
 
 var dataToSend = { addr: from_addr };
 
@@ -344,7 +405,7 @@ BTNClientContext.Signing.GetRawTransactionResponse(data);
 
 console.log('fail');
 var testResponse = {
-    'status': 'ping?',
+    'status': 'server error',
     'sourceScript': 'ERROR',
     'transaction': ''
 };
@@ -460,71 +521,8 @@ $(document).ready(function myfunction() {
         $('#createRawTransactionLoader').hide();
     });
 
-     $('#reSign').click(function () {
-    
-            $('.invalidKey').hide();
-            $('.invalidTransaction').hide();
-    
-            $('#reSignLoader').show();
-            try {
-                BTNClientContext.Signing.ReSignTransaction();
-            }
-            catch (e) {
-                console.log(e);
-                $('.invalidKey').show();
-                $('.invalidTransaction').show();
-    
-    
-                //If the key is invalid the resigned transaction form is hidden again
-                $('#reSignClickedForm').hide();
-    
-            }
-            $('#reSignLoader').hide();
-    });
 
-    $('#send').click(function () {
-        $('#sendLoader').addClass('showUntilAjax');
-        $('#sendLoader').addClass('show3sec');
-        var sendLoaderInterval = setInterval(function () {
-	    $('#sendLoader').removeClass('show3sec');
-	    clearInterval(sendLoaderInterval);
-        }, 3000);
-        //BTNClientContext.Signing.SendTransaction();
-        BTNClientContext.txSend();
-
-        
-    });
-
-    $('#verifyButton').click(function () {
-        $('#verifyMessage').hide();
-        $('#verifyLoader').show();
-
-        //If returned ok then add address to history
-        if (BTNClientContext.Signing.Verify()) {
-            BTNClientContext.Signing.addAddressToHistory();
-
-            console.log('added to history');
-        }
-        else {
-            console.log('not verified and not ok');
-        }
-
-        $('#verifyLoader').hide();
-    });
-
-    //$("#rawJsonRadio").click(function () {
     
-        //    console.log(BTNClientContext.Signing.Transaction);
-        //    var converted = "";
-        //    if ($('#RawRadioBtn').hasClass('active')) { //It raw has class active it means that the json state is selected now
-        //        converted = BTNClientContext.Signing.ConvertRaw();
-        //    }
-        //    else { //the raw state is selected now
-        //        converted = BTNClientContext.Signing.Transaction;
-        //    }
-    
-        //    $('#transactionBBE').val(converted);
-        //});
         $('#JsonRadioBtn').click(function () {
             var converted = BTNClientContext.Signing.ConvertRaw(BTNClientContext.Signing.Transaction);
             $('#transactionBBE').val(converted);
