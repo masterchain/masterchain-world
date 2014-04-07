@@ -45,23 +45,19 @@ def send_form_response(response_dict):
         return (None, "fee must be a number")
 
     currency=response_dict['currency'][0]
-    if currency=='MSC':
-        currency_id=1
-    else:
-        if currency=='TMSC':
-            currency_id=2
-        else:
-            if currency=='BTC':
-                # this is a non mastercoin protocol currency
-                currency_id=0
-            else:
-                return (None, 'Invalid currency')
+    chain_addr='undefined'
+    try:
+        (chain_addr, currency_id)=currencies_dict[currency]
+    except KeyError:
+        return (None, 'Invalid currency')
 
-    marker_addr=None
+    info(chain_addr)
+
+    add_marker=False
     try:
         marker=response_dict['marker'][0]
         if marker.lower()=='true':
-            marker_addr=exodus_address
+            add_marker = True
     except KeyError:
         # if no marker, marker_addr stays None
         pass
@@ -87,7 +83,7 @@ def send_form_response(response_dict):
                 response_status='OK'
 
     if pubkey != None:
-        (tx_to_sign_dict, error_msg)=prepare_send_tx_for_signing(from_addr, to_addr, marker_addr, currency_id, amount, btc_fee)
+        (tx_to_sign_dict, error_msg)=prepare_send_tx_for_signing(from_addr, to_addr, add_marker, chain_addr, currency_id, amount, btc_fee)
         if error_msg != None:
             return (None, error_msg)
     else:
@@ -100,7 +96,7 @@ def send_form_response(response_dict):
 
 
 # simple send and bitcoin send (with or without marker)
-def prepare_send_tx_for_signing(from_address, to_address, marker_address, currency_id, amount, btc_fee=0.0001):
+def prepare_send_tx_for_signing(from_address, to_address, add_marker, chain_addr, currency_id, amount, btc_fee=0.0001):
     # consider a more general func that covers also sell offer and sell accept
 
     # check if address or pubkey was given as from address
@@ -114,7 +110,8 @@ def prepare_send_tx_for_signing(from_address, to_address, marker_address, curren
     # set change address to from address
     change_address_pub=from_address_pub
     changeAddress=from_address
-  
+    marker_address = chain_addr
+ 
     satoshi_amount=to_satoshi(amount)
     fee=to_satoshi(btc_fee)
 
@@ -123,7 +120,7 @@ def prepare_send_tx_for_signing(from_address, to_address, marker_address, curren
         # normal bitcoin send
         required_value=satoshi_amount
         # if marker is needed, allocate dust for the marker
-        if marker_address != None:
+        if add_marker == True:
             required_value+=1*dust_limit
     else:
         tx_type=0 # only simple send is supported
@@ -166,14 +163,14 @@ def prepare_send_tx_for_signing(from_address, to_address, marker_address, curren
         # amount to to_address
         # change to change
 
-        if marker_address != None:
+        if add_marker == True:
             inputs_outputs+=' -o '+marker_address+':'+str(dust_limit)
         inputs_outputs+=' -o '+to_address+':'+str(satoshi_amount)
         
     else:
         # create multisig tx
         # simple send - multisig
-        # dust to exodus
+        # dust to exodus (chain_addr)
         # dust to to_address
         # double dust to rawscript "1 [ change_address_pub ] [ dataHex_obfuscated ] 2 checkmultisig"
         # change to change
@@ -205,7 +202,7 @@ def prepare_send_tx_for_signing(from_address, to_address, marker_address, curren
         info('BIP11 script is '+script_str)
         dataScript=rawscript(script_str)
 
-        inputs_outputs+=' -o '+exodus_address+':'+str(dust_limit) + \
+        inputs_outputs+=' -o '+chain_addr+':'+str(dust_limit) + \
                         ' -o '+to_address+':'+str(dust_limit) + \
                         ' -o '+dataScript+':'+str(2*dust_limit)
 
