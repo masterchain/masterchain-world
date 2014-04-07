@@ -172,14 +172,14 @@ function AcceptOfferController($scope, $http) {
 
 
 function IsPKInLocalStorage(){
-    var from_addr = angular.element($('.AcceptOfferController')).scope().senderAddress;
+    var from_addr = angular.element($('.AcceptOfferController')).scope().Address;
     if (!Boolean(from_addr)) return false;
     var encPK = Wallet.getPK(from_addr);
     return Boolean(encPK);
 }
 
 function DecryptPK(PWD) {
-    var from_addr = angular.element($('.AcceptOfferController')).scope().senderAddress;
+    var from_addr = angular.element($('.AcceptOfferController')).scope().Address;
     if (!Boolean(from_addr)) return false;
     var encPK = Wallet.getPK(from_addr);
     return Wallet.decPK(encPK, PWD);
@@ -268,7 +268,7 @@ return ok;
 }).fail(function () {
 
 console.log('fail');
-$('#verifyMessage').text('ping?');
+$('#verifyMessage').text('server error');
 $('#verifyMessage').addClass('label-danger');
 
 ok = false;
@@ -386,7 +386,7 @@ $('#createRawResponseForm').hide();
 var myURLParams = BTCUtils.getQueryStringArgs();
 var marker = myURLParams['marker'];
 var to_address = $("#recipient").val();
-var from_address = angular.element($('.AcceptOfferController')).scope().senderAddress;
+var from_address = angular.element($('.AcceptOfferController')).scope().Address;
 var amount = $('#amount').val();
 var currency = $('#currency').val();
 var fee = $('#fee').val();
