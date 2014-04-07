@@ -17,7 +17,7 @@ function NavigationController($scope, $http) {
     var filter = myURLParams['filter'];
     var sub_title = "";
     $scope.title = title;
-    $scope.currency = currency;
+    $scope.currency = currency.toUpperCase();
     $scope.footer = '';
     $scope.filter = filter_caption;
     $scope.sub_title = filter_caption;
