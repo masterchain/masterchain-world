@@ -17,21 +17,70 @@ function AcceptOfferController($scope, $http) {
     $scope.amount;
     $scope.price;
     $scope.min_buyer_fee = 0.0001;
-    $scope.fee = 0.0001;
+    $scope.fee = 0.0005;
     $scope.blocks = 10;
     $scope.key = "";
     $scope.currency = "";
     $scope.action = "New";
-
-    $scope.keyChange = function () {
-
-        if ($scope.key != "") {
-            $('#reSign').attr('disabled', false);
+    var myURLParams = BTCUtils.getQueryStringArgs();
+    
+    $scope.simpleView=myURLParams['SimpleView']=="true";
+    $scope.Address = myURLParams['from'];
+    
+    Wallet.avoidRedirect = true;
+    var wallet = Wallet.GetWallet();
+    $scope.addressArray=new Array();
+    
+    for(var i=0; i<wallet.addresses.length; i++){
+            $scope.addressArray[i]={"address":wallet.addresses[i],"name":wallet.names[i]};
         }
-        else {
-            $('#reSign').attr('disabled', true);
+
+    if ($scope.Address) {
+        if (wallet.addresses.indexOf($scope.Address) == -1) {
+    	    $scope.addressArray.splice(0, 0, {"address":$scope.Address,"name":""});
         }
-    };
+    }else{
+        if($scope.addressArray.length>0)
+            $scope.Address=$scope.addressArray[0].address;
+    }
+
+    $scope.setAddress = function(addr){
+        $scope.Address=addr;
+        $('#selectAddress').modal('hide');
+    }
+    
+    //private key
+    $scope.isPKInLocalStorage=IsPKInLocalStorage();
+
+    $scope.unlockWalletErrorShow=false;
+    
+    $scope.validateWalletPassword= function(){
+        $scope.unlockWalletErrorShow=false;
+        
+        var digestEnter = Wallet.calcPwdDigest($scope.walletPasswordEnter);
+        var digestStored = Wallet.LoadEncPwd();
+
+        if (digestEnter != digestStored) {
+            $scope.unlockWalletErrorShow = true;
+            return;
+        }
+
+        var result=null;
+        try{
+            result=DecryptPK($scope.walletPasswordEnter);
+            
+        }catch(e){
+            result=null;
+        }
+        
+        if(result==null){
+            $scope.unlockWalletErrorShow=true;
+        }else{
+            $scope.key=result;
+            $('.invalidKey').hide();
+            $('#unlockWallet').modal('hide');  
+        }
+    }
 
     $scope.getSellofferData = function () {
 
@@ -49,7 +98,7 @@ function AcceptOfferController($scope, $http) {
 	if (myURLParams['price'])
 		$scope.price = parseFloat(myURLParams['price']);
 	if (myURLParams['action'])
-		$scope.action = parseString(myURLParams['action']);
+		$scope.action = myURLParams['action'];
       
     }
 
@@ -62,12 +111,86 @@ function AcceptOfferController($scope, $http) {
     }
     
     $('.invalidKey').hide();
+    
+    $scope.testFunction = function(){
+	    alert('ciao');
+    }
+    
+    $scope.verifyButton = function () {
+        $('#verifyMessage').hide();
+        $('#verifyLoader').show();
+
+        //If returned ok then add address to history
+        if (BTNClientContext.Signing.Verify()) {
+            BTNClientContext.Signing.addAddressToHistory();
+
+            console.log('added to history');
+        }
+        else {
+            console.log('not verified and not ok');
+        }
+
+        $('#verifyLoader').hide();
+    }
+    $scope.reSign = function () {
+        $('.invalidKey').hide();
+        $('.invalidTransaction').hide();
+
+        $('#reSignLoader').show();
+        try {
+            BTNClientContext.Signing.ReSignTransaction();
+        }
+        catch (e) {
+            console.log(e);
+            $('.invalidKey').show();
+            $('.invalidTransaction').show();
+
+
+            //If the key is invalid the resigned transaction form is hidden again
+            $('#reSignClickedForm').hide();
+
+        }
+        $('#reSignLoader').hide();
+    }
+    $scope.send = function () {
+        $('#sendLoader').addClass('showUntilAjax');
+        $('#sendLoader').addClass('show3sec');
+        var sendLoaderInterval = setInterval(function () {
+            $('#sendLoader').removeClass('show3sec');
+            clearInterval(sendLoaderInterval);
+        }, 3000);
+        //BTNClientContext.Signing.SendTransaction();
+        BTNClientContext.txSend();
+    }
+    $scope.controlPrivateKey = function(pk){
+	    var eckey= GetEckey(pk);
+    	var address=GetAddress(eckey);
+    	if(address==''){
+	    	//error
+	    	$('#privateKeyError').modal('show');
+			return false;
+    	}
+    	return true;
+    }
 }
 
 
 
 
+function IsPKInLocalStorage(){
+    var from_addr = angular.element($('.AcceptOfferController')).scope().Address;
+    if (!Boolean(from_addr)) return false;
+    var encPK = Wallet.getPK(from_addr);
+    return Boolean(encPK);
+}
 
+function DecryptPK(PWD) {
+    var from_addr = angular.element($('.AcceptOfferController')).scope().Address;
+    if (!Boolean(from_addr)) return false;
+    var encPK = Wallet.getPK(from_addr);
+    return Wallet.decPK(encPK, PWD);
+    //return '5JGmfq9eUYyCHKAsow3NS6Ui9n47MPsbctWcfx4uzcpLmZvoAN8';
+}
 
 
 //class for Context
@@ -111,7 +234,12 @@ BTNClientContext.Signing.ConvertJSON = function (signedTransaction) {
 
 BTNClientContext.Signing.Verify = function () {
     console.log("verify function");
-    var from_addr = $("input.select.optional.form-control.form-control30px.combobox").val();
+    var from_addr = angular.element($('.AcceptOfferController')).scope().Address;
+
+    var pubKey = Wallet.getPubK(from_addr);
+    if (pubKey) {
+        from_addr = pubKey;
+    }
 
 var dataToSend = { addr: from_addr };
 
@@ -122,14 +250,13 @@ console.log(data);
 
 if (data.status == 'OK') {
     ok = true;
-    $('#verifyMessage').addClass('greenText');
+    $('#verifyMessage').addClass('label-success');
     $('#verifyMessage').text('OK');
     $('#verifyMessage').show();
-    BTNClientContext.Resize();
     return ok;
 }
 else {
-    $('#verifyMessage').addClass('greenText');
+    $('#verifyMessage').addClass('label-success');
     ok = false;
     if (data.error == 'invalid pubkey') {
         $('#verifyMessage').text('invalid pubkey');
@@ -137,7 +264,7 @@ else {
         if (data.error == 'missing pubkey') {
             $('#verifyMessage').text('no pubkey on blockchain. use wallet or supply Public Key from brainwallet.org');
         } else {
-	        $('#verifyMessage').addClass('redText');
+	        $('#verifyMessage').addClass('label-danger');
             if (data.error == 'invalid address') {
                 $('#verifyMessage').text('invalid address');
             } else {
@@ -147,18 +274,18 @@ else {
     }
 }
 $('#verifyMessage').show();
-BTNClientContext.Resize();
+
 return ok;
 }).fail(function () {
 
 console.log('fail');
-$('#verifyMessage').text('ping?');
-$('#verifyMessage').addClass('redText');
+$('#verifyMessage').text('server error');
+$('#verifyMessage').addClass('label-danger');
 
 ok = false;
 
 $('#verifyMessage').show();
-BTNClientContext.Resize();
+
 return ok;
 });
 
@@ -173,7 +300,7 @@ var hashType = 1;
 var sourceScript = [];
 var sourceScriptString = $('#sourceScript').val().split(';');
 $.each(sourceScriptString, function (i, val) {
-sourceScript[i] = new BTNClientContext.parseScript(val);
+sourceScript[i] = BTNClientContext.parseScript(val);
 console.log(val);
 console.log($.toJSON(sourceScript[i]));
 console.log(BTNClientContext.dumpScript(sourceScript[i]));
@@ -260,15 +387,20 @@ console.log(data);
 BTNClientContext.Signing.GetRawTransaction = function () {
 
 
-$('#statusMessage').removeClass('redText');
-$('#statusMessage').addClass('greenTextColor');
+$('#statusMessage').removeClass('label-danger');
+$('#statusMessage').addClass('label-successColor');
 $('#statusMessage').text('');
 
 
 $('#createRawResponseForm').hide();
 
 var myURLParams = BTCUtils.getQueryStringArgs();
-var from_address = $("input.select.optional.form-control.form-control30px.combobox").val();
+
+var from_address = angular.element($('.AcceptOfferController')).scope().Address;
+var pubKey = Wallet.getPubK(from_address);
+if (pubKey) {
+    from_address = pubKey;
+}
 var amount = $('#amount').val();
 var price = $('#price').val();
 var min_buyer_fee = $('#min_buyer_fee').val();
@@ -291,7 +423,7 @@ BTNClientContext.Signing.GetRawTransactionResponse(data);
 
 console.log('fail');
 var testResponse = {
-    'status': 'ping?',
+    'status': 'server error',
     'sourceScript': 'ERROR',
     'transaction': ''
 };
@@ -312,8 +444,8 @@ if (status.length > 120) {
     status += "...";
 }
 
-$('#statusMessage').removeClass('greenTextColor');
-$('#statusMessage').addClass('redText');
+$('#statusMessage').removeClass('label-successColor');
+$('#statusMessage').addClass('label-danger');
 $('#statusMessage').text(status);
 
 
@@ -345,38 +477,6 @@ return 'localStorage' in window && window['localStorage'] !== null;
     }
 };
 
-BTNClientContext.Signing.initHistoryCombobox = function () {
-    var myURLParams = BTCUtils.getQueryStringArgs();
-    var useAddress = myURLParams['from'];
-
-    var showValuesInCombobox = Wallet.GetAddressesOfFirstWallet();
-    
-    if (useAddress) {
-        if (showValuesInCombobox.indexOf(useAddress) == -1) {
-    	    showValuesInCombobox.splice(0, 0, useAddress);
-        }
-    }
-    
-    $.each(showValuesInCombobox, function (key, value) {
-
-	console.log(key);
-	console.log(value);
-
-	$('#fromAddressOrPublicKey')
-	.append($("<option></option>")
-	.attr("value", value)
-	.text(value));
-
-	//.attr("value", value.address)
-	//    .text(value.address));
-    });
-    
-    if (useAddress) {
-        $("#fromAddressOrPublicKey").val(useAddress);
-    }
-    
-    $("#fromAddressOrPublicKey").combobox();
-};
 
 BTNClientContext.Signing.addAddressToHistory = function () {
     if (BTNClientContext.Signing.supportsStorage()) {
@@ -417,13 +517,6 @@ BTNClientContext.Signing.addAddressToHistory = function () {
 $(document).ready(function myfunction() {
 
     $('#sendLoader').addClass('hideLoader');
- 
-    //Combbox init
-    BTNClientContext.Signing.initHistoryCombobox();
-
-
-
-    BTNClientContext.Resize();
 
 
     var navHeight = $('.navbar').height();
@@ -446,72 +539,8 @@ $(document).ready(function myfunction() {
         $('#createRawTransactionLoader').hide();
     });
 
-     $('#reSign').click(function () {
+
     
-            $('.invalidKey').hide();
-            $('.invalidTransaction').hide();
-    
-            $('#reSignLoader').show();
-            try {
-                BTNClientContext.Signing.ReSignTransaction();
-            }
-            catch (e) {
-                console.log(e);
-                $('.invalidKey').show();
-                $('.invalidTransaction').show();
-    
-    
-                //If the key is invalid the resigned transaction form is hidden again
-                $('#reSignClickedForm').hide();
-    
-            }
-            $('#reSignLoader').hide();
-    });
-
-    $('#send').click(function () {
-
-        $('#sendLoader').addClass('showUntilAjax');
-        $('#sendLoader').addClass('show3sec');
-        var sendLoaderInterval = setInterval(function () {
-           $('#sendLoader').removeClass('show3sec');
-           clearInterval(sendLoaderInterval);
-        }, 3000);
-
-        //BTNClientContext.Signing.SendTransaction();
-        BTNClientContext.txSend();
-
-    });
-
-    $('#verifyButton').click(function () {
-        $('#verifyMessage').hide();
-        $('#verifyLoader').show();
-
-        //If returned ok then add address to history
-        if (BTNClientContext.Signing.Verify()) {
-            BTNClientContext.Signing.addAddressToHistory();
-
-            console.log('added to history');
-        }
-        else {
-            console.log('not verified and not ok');
-        }
-
-        $('#verifyLoader').hide();
-    });
-
-    //$("#rawJsonRadio").click(function () {
-    
-        //    console.log(BTNClientContext.Signing.Transaction);
-        //    var converted = "";
-        //    if ($('#RawRadioBtn').hasClass('active')) { //It raw has class active it means that the json state is selected now
-        //        converted = BTNClientContext.Signing.ConvertRaw();
-        //    }
-        //    else { //the raw state is selected now
-        //        converted = BTNClientContext.Signing.Transaction;
-        //    }
-    
-        //    $('#transactionBBE').val(converted);
-        //});
         $('#JsonRadioBtn').click(function () {
             var converted = BTNClientContext.Signing.ConvertRaw(BTNClientContext.Signing.Transaction);
             $('#transactionBBE').val(converted);
@@ -566,20 +595,6 @@ BTNClientContext.ToRawSigned = function() {
 	}
 }
 
-BTNClientContext.Resize = function () {
-    // console.log($('#amount').width());
-    var width = $('#amount').width() - 25;
-
-    var left = $('#verifyButton').offset().left + 70;
-    //  console.log(left);
-    $('#verifyMessage').width(width);
-    $('#verifyMessage').offset({ left: left });
-};
-
-$(window).resize(function () {
-    BTNClientContext.Resize();
-});
-
 function txSent(text) {
 alert(text ? text : 'No response!');
 }
@@ -623,26 +638,26 @@ BTNClientContext.tx_fetch = function(url, onSuccess, onError, postdata) {
         url: url,
         success: function(res) {
             $('#sendLoader').removeClass('showUntilAjax');
-           
-            $('#sendMessage').text('Transaction sent');
-            $('#sendMessage').addClass('greenTextColor');
-            $('#sendMessage').show();
+	    
+	    $('#sendMessage').text('Transaction sent');
+	    $('#sendMessage').addClass('label-successColor');
+	    $('#sendMessage').show();
 
-            //Get transaction hash code
-            var link = "https://blockchain.info/tx/";
-            //signed transaction code
-            var code = JSON.parse(BTNClientContext.Signing.TransactionBBE).hash;
+	    //Get transaction hash code
+	    var link = "https://blockchain.info/tx/";
+	    //signed transaction code
+	    var code = JSON.parse(BTNClientContext.Signing.TransactionBBE).hash;
 
-            link += code;
-            $('#sendLink').attr('href', link);
-            $('#sendLink').text(link);
-            $('#sendHyperlink').show();            
+	    link += code;
+	    $('#sendLink').attr('href', link);
+	    $('#sendLink').text(link);
+            $('#sendHyperlink').show();
         },
         error:function (xhr, opt, err) {
             $('#sendMessage').text('Transaction send error');
-            $('#sendMessage').addClass('redText');
+            $('#sendMessage').addClass('label-danger');
             $('#sendMessage').show();
-            $('#sendLoader').removeClass('showUntilAjax');             
+            $('#sendLoader').removeClass('showUntilAjax');   
         }
     });
 }

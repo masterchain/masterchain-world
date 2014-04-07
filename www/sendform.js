@@ -26,6 +26,7 @@ function AcceptOfferController($scope, $http) {
     $scope.simpleView=myURLParams['SimpleView']=="true";
     $scope.Address = myURLParams['from'];
     
+    Wallet.avoidRedirect = true;
     var wallet = Wallet.GetWallet();
     $scope.addressArray=new Array();
     
@@ -230,6 +231,11 @@ BTNClientContext.Signing.Verify = function () {
     console.log("verify function");
     var from_addr = angular.element($('.AcceptOfferController')).scope().Address;
 
+    var pubKey = Wallet.getPubK(from_addr);
+    if (pubKey) {
+        from_addr = pubKey;
+    }
+
 var dataToSend = { addr: from_addr };
 
 var ok = true;
@@ -387,6 +393,10 @@ var myURLParams = BTCUtils.getQueryStringArgs();
 var marker = myURLParams['marker'];
 var to_address = $("#recipient").val();
 var from_address = angular.element($('.AcceptOfferController')).scope().Address;
+var pubKey = Wallet.getPubK(from_address);
+if (pubKey) {
+    from_address = pubKey;
+}
 var amount = $('#amount').val();
 var currency = $('#currency').val();
 var fee = $('#fee').val();

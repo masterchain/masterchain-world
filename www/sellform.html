@@ -29,6 +29,7 @@
       <link href="css/bootstrap-theme.css" rel="stylesheet">
       <link href="css/bootstrap-combobox.css" rel="stylesheet"> 
       <link href="css/search.css" rel="stylesheet">
+      <link href="css/sendform.css" rel="stylesheet">
       <script src="js/jquery-1.10.1.min.js"></script>
       <script src="js/jquery.tabSlideOut.v1.3.js"></script>
       <script src="js/angular.js"></script>
@@ -43,6 +44,7 @@
       <script src="js/bootstrap.min.js"></script>
       <link href="css/acceptform.css" rel="stylesheet">
       <script src="wallet.js"></script>
+      <script src="js/base_directives.js"></script>
       <script src="sellform.js"></script>
       <script src="masterEvents.js"></script>
       <script src="js/BTCClientContext.js"></script>
@@ -113,29 +115,30 @@
                 <div class="row">
                     <div class="no-fixed col-sm-9 col-sm-push-3 col-md-10 col-md-push-2">
                         <div class="AcceptOfferController" ng-controller="AcceptOfferController" ng-init="getSellofferData()">
-                            <div class="col-md-6">
-                                <h2>Create sell offer
-                                </h2>
-                                <div class="input string optional" id="fromAddressOrPublicKeyDiv">
-                                    <!-- <div class="ui-widget">-->
+                            <div class="col-lg-7 col-md-9">
+                            	<a popover data-trigger="hover" data-html="true" data-content="Switch to advanced view" data-placement="left" ng-show="simpleView" ng-click="simpleView=0" class="pull-right btn btn-sm">to Advanced View</a>
+                            	<a popover data-trigger="hover" data-html="true" data-content="Switch to simple view" data-placement="left" ng-hide="simpleView" ng-click="simpleView=1" class="pull-right btn btn-sm">to Simple View</a>
+                                <h2>Create sell offer</h2>
+                                
+								<div class="input string optional" id="fromAddressOrPublicKeyDiv">
+								    <label class="string optional" for="publicKey">Seller address or public key</label>
+									<set-address></set-address>
+								</div>
+
+                                
+                                <!--div class="input string optional" id="fromAddressOrPublicKeyDiv">
                                     <label class="string optional" for="publicKey">Seller address or public key</label>
 
-                                    <select class="select optional form-control form-control30px combobox"
-                                        id="fromAddressOrPublicKey" name="fromAddressOrPublicKey">
-
-                                        <!-- ng-model="transactionInformation.to_address"
-                                                ng-change="comboBoxValueChange(this)"-->
 
                                     </select>
-                                    <!-- </div>
-                                        <button id="toggle">Show underlying select</button>-->
+                                    
                                     <div id="verify">
                                         <button id="verifyButton" class="btn btn-primary verifyButton">Verify</button>
                                         <p id="verifyMessage" class="verifyMessage"></p>
                                         <img id="verifyLoader" class="verifyLoader loader"
                                             src="img/ajax_loader.gif" />
                                     </div>
-                                </div>
+                                </div-->
                                 <div class="input string optional">
                                     <label class="string optional" for="amount">Amount to sell</label>
                                     <input class="string optional form-control" id="amount"
@@ -196,74 +199,10 @@
                                 </div>
                             </div>
 
-                            <!--AFTER RESPONSE-->
-                            <div class="col-md-10" id="createRawResponseForm" style="display: none;">
-                                <div class="input string optional">
-                                    <label class="string optional" for="sourceScript">Source script</label>
-                                    <textarea readonly="readonly" class="form-control textareaScroll" rows="3" id="sourceScript"></textarea>
-                                </div>
-                                <div class="input string optional">
-                                    <label class="string optional" for="transactionBBE">Transaction</label>
-                                    <textarea readonly="readonly" class="form-control textareaScroll" rows="6" id="transactionBBE"></textarea>
-
-                                    <div id="rawJsonRadio" class="btn-group" data-toggle="buttons">
-                                        <label id="RawRadioBtn" class="btn btn-primary active">
-                                            <input type="radio" name="options">
-                                            Raw
-                                        </label>
-                                        <label id="JsonRadioBtn" class="btn btn-primary">
-                                            <input type="radio" name="options">
-                                            Json
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="input string optional">
-                                    <label class="string optional" for="privateKey">Private key</label>
-                                    <input class="string optional form-control" id="privateKey"
-                                        ng-model="key" ng-change="keyChange()"
-                                        type="text">
-                                    <span class="invalidKey redText">Invalid key</span>
-                                </div>
-                                <br />
-                                <div>
-                                    <button class="btn btn-primary btnMargin"
-                                        id="reSign">
-                                        (re)Sign
-                                    </button>
-                                    <img id="reSignLoader"
-                                        src="img/ajax_loader.gif" class="loader" />
-                                </div>
-                            </div>
-                            <div class="col-md-10" id="reSignClickedForm" style="display: none;">
-                                <div class="input string optional">
-                                    <label class="string optional" for="signedTransactionBBE">Transaction</label>
-                                    <textarea class="form-control textareaScroll" rows="6" id="signedTransactionBBE"></textarea>
-				    <span class="invalidTransaction redText">Invalid transaction</span>
-				    <div id="rawJsonRadioSigned" class="btn-group" data-toggle="buttons">
-					<label id="RawRadioBtnSigned" class="btn btn-primary active">
-					    <input type="radio" name="options">Raw
-					</label>
-					<label id="JsonRadioBtnSigned" class="btn btn-primary ">
-					    <input type="radio" name="options">Json
-					</label>
-                                    </div>
-                                </div>
-                                <div>
-                                    <button class="btn btn-primary btnMargin"
-                                        id="send">
-                                        Send
-                                    </button>
-                                    <p id="sendMessage"  class="verifySendStatus"></p>
-                                    <img id="sendLoader"
-                                        src="img/ajax_loader.gif"
-                                        class="loader" />
-                                </div>
-                                <div id="sendHyperlink">
-                                    Check transaction: <a id="sendLink" href="#">Hyperlink</a>
-                                </div>
-                                <p></p>
-                                <p></p>
-                            </div>
+							<after-response></after-response>
+                            
+                            <send-part></send-part>
+                            
                         </div>
                     </div>
                   <div class="left_bar jumbotron col-sm-3 col-sm-pull-9 col-md-2 col-md-pull-10">
@@ -295,6 +234,7 @@
             <div class="muted credit">&copy; <a href="https://masterchain.info">Masterchain</a> Grazcoin Grimentz 2013-2014.</div>
          </div>
       </div>
+      <private-key-error></private-key-error>
    </body>
 </html>
 

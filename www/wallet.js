@@ -1120,6 +1120,7 @@ Wallet.DeleteIndex = function (walletUuid, idx) {
     return retVal;
 };
 
+Wallet.avoidRedirect = false;
 
 Wallet.CreateNewWallet = function (in_uuid) {
     var uuid = (in_uuid)? in_uuid : Wallet.GenerateUUID();
@@ -1174,8 +1175,9 @@ Wallet.CreateNewWallet = function (in_uuid) {
 
 
         //open wallet.html with the URL parameter: uuid=uuid-of-first-address
-
-        window.location.href = "wallet.html?uuid=" + uuidToOpen;
+	if (!Wallet.avoidRedirect) {
+        	window.location.href = "wallet.html?uuid=" + uuidToOpen;
+	}
 
 
     }
