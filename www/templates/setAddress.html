@@ -1,0 +1,61 @@
+
+    <div class="input-group">
+        <span class="input-group-btn">
+            <button data-toggle="modal" data-target="#selectAddress" class="btn btn-success" popover data-trigger="hover" data-html="true" data-container="body" data-content="Load Address from Wallet" data-placement="right"><i class="glyphicon glyphicon-list"></i></button>
+        </span>
+        
+        <input type="text" class="string optional form-control" ng-model="Address" />
+        <span class="input-group-btn">
+            <button id="verifyButton" ng-click="verifyButton()" class="btn btn-primary">Verify</button>
+        </span>
+    </div>
+    <div id="verify">
+        <div id="verifyMessage" class="label"></div>
+        <img id="verifyLoader" class="verifyLoader loader"
+            src="img/ajax_loader.gif" />
+    </div>
+    <!-- select class="select optional form-control form-control30px combobox"
+        id="fromAddressOrPublicKey" name="fromAddressOrPublicKey">
+
+        < ng-model="transactionInformation.to_address"
+                ng-change="comboBoxValueChange(this)">
+
+    </select>
+    </div>
+        <button id="toggle">Show underlying select</button>-->
+    
+
+
+                                
+<div class="modal fade" id="selectAddress" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Select address from your Wallet</h4>
+      </div>
+      <div class="modal-body">
+        <table  class="table addressList table-responsive table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr class="row-fluid addressList" ng-repeat="addr in addressArray">
+            <td>
+                <a class="btn btn-primary" ng-show="addr.name" href ng-click="setAddress(addr.address)">{{addr.name}}</a>
+            </td><td>
+                <a class="btn btn-primary" href ng-click="setAddress(addr.address)">{{addr.address}}</a>
+            </td>
+            </a>
+        </tr>
+        </tbody>
+        </table>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
