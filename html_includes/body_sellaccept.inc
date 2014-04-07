@@ -27,6 +27,10 @@
                                             <td><a ng-href="Address.html?addr={{transactionInformation.to_address}}&currency={{currency}}">{{transactionInformation.to_address}}</a></td>
                                         </tr>
                                         <tr>
+                                           <td>Chain</td>
+                                           <td><a ng-href="Address.html?addr={{transactionInformation.exodus_scan}}&currency={{currency}}">{{transactionInformation.exodus_scan}}</a></td>
+                                        </tr>
+                                        <tr>
                                             <td>Currency</td>
                                             <td>{{transactionInformation.currency_str}}</td>
                                         </tr>
