@@ -107,10 +107,6 @@ function AcceptOfferController($scope, $http) {
     
     $('.invalidKey').hide();
     
-    $scope.testFunction = function(){
-	    alert('ciao');
-    }
-    
     $scope.verifyButton = function () {
         $('#verifyMessage').hide();
         $('#verifyLoader').show();
@@ -167,10 +163,37 @@ function AcceptOfferController($scope, $http) {
     	}
     	return true;
     }
+
+    $scope.JsonRadioBtn = function () {
+        var converted = BTNClientContext.Signing.ConvertRaw(BTNClientContext.Signing.Transaction);
+        $('#transactionBBE').val(converted);
+    };
+
+    $scope.RawRadioBtn= function () {
+        var converted = BTNClientContext.Signing.Transaction;
+        $('#transactionBBE').val(converted);
+    };
+
+    $scope.JsonRadioBtnSigned = function () {
+        if (BTNClientContext.Signing.RawChecked == true) {
+            var rawTransaction = $('#signedTransactionBBE').val();
+            var converted = BTNClientContext.Signing.ConvertRaw(rawTransaction);
+            $('#signedTransactionBBE').val(converted);
+            $('#signedTransactionBBE').attr('readonly', false);
+            BTNClientContext.Signing.RawChecked = false;
+        }
+    };
+
+
+    $scope.RawRadioBtnSigned= function () {
+        BTNClientContext.ToRawSigned();
+        if ($('.invalidTransaction').is(":visible")) {
+            console.log('Json is invalid');
+            $('#RawRadioBtnSigned').removeClass('active');
+            $('#JsonRadioBtnSigned').addClass('active');
+        }
+    };
 }
-
-
-
 
 function IsPKInLocalStorage(){
     var from_addr = angular.element($('.AcceptOfferController')).scope().Address;
@@ -184,7 +207,6 @@ function DecryptPK(PWD) {
     if (!Boolean(from_addr)) return false;
     var encPK = Wallet.getPK(from_addr);
     return Wallet.decPK(encPK, PWD);
-    //return '5JGmfq9eUYyCHKAsow3NS6Ui9n47MPsbctWcfx4uzcpLmZvoAN8';
 }
 
 
@@ -530,39 +552,8 @@ $(document).ready(function myfunction() {
 
         $('#createRawTransactionLoader').hide();
     });
-
-
     
-        $('#JsonRadioBtn').click(function () {
-            var converted = BTNClientContext.Signing.ConvertRaw(BTNClientContext.Signing.Transaction);
-            $('#transactionBBE').val(converted);
-        });
-        $('#RawRadioBtn').click(function () {
-            var converted = BTNClientContext.Signing.Transaction;
-            $('#transactionBBE').val(converted);
-        });
-    
-    
-        $('#JsonRadioBtnSigned').click(function () {
-            if (BTNClientContext.Signing.RawChecked == true) {
-            	var rawTransaction = $('#signedTransactionBBE').val();
-    		var converted = BTNClientContext.Signing.ConvertRaw(rawTransaction);
-            	$('#signedTransactionBBE').val(converted);
-                $('#signedTransactionBBE').attr('readonly', false);
-                BTNClientContext.Signing.RawChecked = false;
-            }
-        });
-    
-        BTNClientContext.Signing.RawChecked = true;
-        $('#RawRadioBtnSigned').click(function () {
-            BTNClientContext.ToRawSigned();
-            if ($('.invalidTransaction').is(":visible")) {
-                console.log('Json is invalid');
-                $('#RawRadioBtnSigned').removeClass('active');
-                $('#JsonRadioBtnSigned').addClass('active');
-    
-            }
-        });
+    BTNClientContext.Signing.RawChecked = true;
     
 });
 
