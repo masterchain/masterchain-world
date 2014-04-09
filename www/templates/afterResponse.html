@@ -14,11 +14,11 @@
                                     <textarea readonly="readonly" class="form-control textareaScroll" rows="6" id="transactionBBE"></textarea>
 
                                     <div id="rawJsonRadio" class="btn-group" data-toggle="buttons">
-                                        <label id="RawRadioBtn" class="btn btn-primary active">
+                                        <label id="RawRadioBtn" ng-click="RawRadioBtn()" class="btn btn-primary active">
                                             <input type="radio" name="options">
                                             Raw
                                         </label>
-                                        <label id="JsonRadioBtn" class="btn btn-primary">
+                                        <label id="JsonRadioBtn" ng-click="JsonRadioBtn()" class="btn btn-primary">
                                             <input type="radio" name="options">
                                             Json
                                         </label>
