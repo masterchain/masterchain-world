@@ -104,6 +104,7 @@ def prepare_accept_tx_for_signing(buyer, amount, tx_hash, min_btc_fee=0.0001):
         formatted_bitcoin_amount_desired=sell_offer_tx_dict['formatted_bitcoin_amount_desired']
         formatted_fee_required=sell_offer_tx_dict['formatted_fee_required']
         currency_id=sell_offer_tx_dict['currencyId']
+        chain_addr=sell_offer_tx_dict['exodus_scan']
     except KeyError:
         error_msg='missing field on tx '+tx_hash
         info(error_msg)
@@ -151,7 +152,7 @@ def prepare_accept_tx_for_signing(buyer, amount, tx_hash, min_btc_fee=0.0001):
         return(None, error_msg)
 
     # sell accept - multisig
-    # dust to exodus
+    # dust to exodus (chain address)
     # dust to to_address
     # double dust to rawscript "1 [ change_address_pub ] [ dataHex_obfuscated ] 2 checkmultisig"
     # change to change
@@ -185,7 +186,7 @@ def prepare_accept_tx_for_signing(buyer, amount, tx_hash, min_btc_fee=0.0001):
     info('BIP11 script is '+script_str)
     dataScript=rawscript(script_str)
 
-    inputs_outputs+=' -o '+exodus_address+':'+str(dust_limit) + \
+    inputs_outputs+=' -o '+chain_addr+':'+str(dust_limit) + \
                     ' -o '+seller+':'+str(dust_limit) + \
                     ' -o '+dataScript+':'+str(2*dust_limit)
     if change_value >= dust_limit:
@@ -198,6 +199,7 @@ def prepare_accept_tx_for_signing(buyer, amount, tx_hash, min_btc_fee=0.0001):
     info('inputs_outputs are '+inputs_outputs)
     info('parsed tx is '+str(get_json_tx(tx)))
 
+    msc_globals.exodus_scan=chain_addr
     parse_dict=parse_multisig(tx)
     info(parse_dict)
 

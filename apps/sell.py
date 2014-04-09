@@ -67,13 +67,13 @@ def sell_form_response(response_dict):
     if blocks<1 or blocks>max_payment_timeframe:
         return (None, 'Invalid payment timeframe')
     currency=response_dict['currency'][0]
-    if currency=='MSC':
-        currency_id=1
-    else:
-        if currency=='TMSC':
-            currency_id=2
-        else:
-            return (None, 'Invalid currency')
+
+    try:
+        currency_dict=currencies_per_symbol_dict[currency]
+        chain_addr=currency_dict['exodus']
+        currency_id=currency_dict['currency_id']
+    except KeyError:
+        return (None, 'Invalid currency')
 
     satoshi_price=to_satoshi(price)
     bitcoin_amount_desired=int(round(satoshi_price*float(amount)))
@@ -99,7 +99,7 @@ def sell_form_response(response_dict):
                 response_status='OK'
 
     if pubkey != None:
-        (tx_to_sign_dict, error_msg)=prepare_sell_tx_for_signing(seller, action, amount, bitcoin_amount_desired, min_buyer_fee, fee, blocks, currency_id)
+        (tx_to_sign_dict, error_msg)=prepare_sell_tx_for_signing(seller, action, amount, bitcoin_amount_desired, min_buyer_fee, fee, blocks, chain_addr, currency_id)
         if error_msg != None:
             return (None, error_msg)
     else:
@@ -110,7 +110,7 @@ def sell_form_response(response_dict):
     response='{"status":"'+response_status+'", "transaction":"'+tx_to_sign_dict['transaction']+'", "sourceScript":"'+tx_to_sign_dict['sourceScript']+'"}'
     return (response, None)
 
-def prepare_sell_tx_for_signing(seller, action, amount, bitcoin_amount_desired, btc_min_buyer_fee, btc_fee, blocks, currency_id):
+def prepare_sell_tx_for_signing(seller, action, amount, bitcoin_amount_desired, btc_min_buyer_fee, btc_fee, blocks, chain_addr, currency_id):
 
     # check if address or pubkey was given as seller
     if seller.startswith('0'): # a pubkey was given
@@ -162,7 +162,7 @@ def prepare_sell_tx_for_signing(seller, action, amount, bitcoin_amount_desired, 
         return (None, error_msg)
 
     # sell offer - multisig
-    # dust to exodus
+    # dust to exodus (chain addresS)
     # double dust to rawscript "1 [ change_address_pub ] [ dataHex_obfuscated ] [ dataHex2_obfuscated ] 3 checkmultisig"
     # change to change
     tx_version=0x0001 # ver 1
@@ -201,7 +201,7 @@ def prepare_sell_tx_for_signing(seller, action, amount, bitcoin_amount_desired, 
     info('BIP11 script is '+script_str)
     dataScript=rawscript(script_str)
 
-    inputs_outputs+=' -o '+exodus_address+':'+str(dust_limit) + \
+    inputs_outputs+=' -o '+chain_addr+':'+str(dust_limit) + \
                     ' -o '+dataScript+':'+str(2*dust_limit)
     if change_value >= dust_limit:
         inputs_outputs+=' -o '+changeAddress+':'+str(change_value)

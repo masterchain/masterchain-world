@@ -47,7 +47,9 @@ def send_form_response(response_dict):
     currency=response_dict['currency'][0]
     chain_addr='undefined'
     try:
-        (chain_addr, currency_id)=currencies_dict[currency]
+        currency_dict=currencies_per_symbol_dict[currency]
+        chain_addr=currency_dict['exodus']
+        currency_id=currency_dict['currency_id']
     except KeyError:
         return (None, 'Invalid currency')
 
