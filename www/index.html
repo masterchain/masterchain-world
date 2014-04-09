@@ -65,8 +65,8 @@
                   <div class="navbar-collapse collapse">
                      <ul class="nav navbar-nav navbar-right">
                         <li class="c-visible-xs"><a href="wallet.html">Wallet</a></li>
-                        <li><a href="index.html?currency={{currency}}">Recent</a></li>
-                        <li><a href="index.html?filter=sell&currency={{currency}}">Orderbook</a></li>
+                        <li><a href="index.html?currency={{currency | uppercase}}">Recent</a></li>
+                        <li><a href="index.html?filter=sell&currency={{currency | uppercase}}">Orderbook</a></li>
                         <li><a href="About.html">Info</a></li>
                         <li>
                            <a class="searchLI">
@@ -87,7 +87,7 @@
                      <div class="inner">
                         <div ng-controller="BTCController" ng-init="getData(1)">
                            <table class="table table-striped table-hover table-condensed">
-                              <caption>Latest {{currency}}{{sub_title}} transactions</caption>
+                              <caption>Latest {{currency | uppercase}}{{sub_title}} transactions</caption>
                               <thead>
                                  <tr>
                                     <th>Transaction</th>
@@ -107,40 +107,40 @@
                                           alt=""
                                           />
                                        <span ng-switch-when="selloffer">
-                                       <a ng-href='selloffer.html?tx={{trans.tx_hash}}&currency={{currency}}'>{{trans.tx_hash | characters:10}}
+                                       <a ng-href='selloffer.html?tx={{trans.tx_hash}}&currency={{currency | uppercase}}'>{{trans.tx_hash | characters:10}}
                                        </a>
                                        </span>
                                        <span ng-switch-when="sellaccept">
-                                       <a ng-href='sellaccept.html?tx={{trans.tx_hash}}&currency={{currency}}'>{{trans.tx_hash | characters:10}}
+                                       <a ng-href='sellaccept.html?tx={{trans.tx_hash}}&currency={{currency | uppercase}}'>{{trans.tx_hash | characters:10}}
                                        </a>
                                        </span>
                                        <span ng-switch-when="simplesend">
-                                       <a ng-href='simplesend.html?tx={{trans.tx_hash}}&currency={{currency}}'>{{trans.tx_hash | characters:10}}
+                                       <a ng-href='simplesend.html?tx={{trans.tx_hash}}&currency={{currency | uppercase}}'>{{trans.tx_hash | characters:10}}
                                        </a>
                                        </span>
                                        <span ng-switch-when="exodus">
-                                       <a ng-href='exodus.html?tx={{trans.tx_hash}}&currency={{currency}}'>{{trans.tx_hash | characters:10}}
+                                       <a ng-href='exodus.html?tx={{trans.tx_hash}}&currency={{currency | uppercase}}'>{{trans.tx_hash | characters:10}}
                                        </a>
                                        </span>
                                        <span ng-switch-when="unknown">
-                                       <a ng-href='btcpayment.html?tx={{trans.tx_hash}}&currency={{currency}}'>{{trans.tx_hash | characters:10}}
+                                       <a ng-href='btcpayment.html?tx={{trans.tx_hash}}&currency={{currency  | uppercase}}'>{{trans.tx_hash | characters:10}}
                                        </a>
                                        </span>
                                        <span ng-switch-default>
-                                       <a ng-href='btcpayment.html?tx={{trans.tx_hash}}&currency={{currency}}'>{{trans.tx_hash | characters:10}}
+                                       <a ng-href='btcpayment.html?tx={{trans.tx_hash}}&currency={{currency  | uppercase}}'>{{trans.tx_hash | characters:10}}
                                        </a>
                                        </span>
                                     </td>
                                     <td ng-switch on="trans.icon">
-                                       <span ng-switch-when="selloffer">{{trans.formatted_price_per_coin}} ฿/{{currency}}
+                                       <span ng-switch-when="selloffer">{{trans.formatted_price_per_coin}} ฿/{{currency | uppercase}}
                                        </span>
-                                       <span ng-switch-when="sellaccept">{{trans.formatted_price_per_coin}} ฿/{{currency}}
+                                       <span ng-switch-when="sellaccept">{{trans.formatted_price_per_coin}} ฿/{{currency | uppercase}}
                                        </span>
                                        <span ng-switch-when="simplesend">
-                                       <a href='Address.html?addr={{trans.to_address}}&currency={{currency}}'>{{trans.to_address}}</a>
+                                       <a href='Address.html?addr={{trans.to_address}}&currency={{currency | uppercase}}'>{{trans.to_address}}</a>
                                        </span>
                                        <span ng-switch-when="exodus">
-                                       <a href='Address.html?addr={{trans.to_address}}&currency={{currency}}'>{{trans.to_address}}</a>
+                                       <a href='Address.html?addr={{trans.to_address}}&currency={{currency | uppercase}}'>{{trans.to_address}}</a>
                                        </span>
                                        <span ng-switch-default>
                                        </span>
