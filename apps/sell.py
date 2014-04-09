@@ -68,6 +68,9 @@ def sell_form_response(response_dict):
         return (None, 'Invalid payment timeframe')
     currency=response_dict['currency'][0]
 
+    if currency == 'BTC':
+        return (None, 'Selling BTC is currently not supported')
+
     try:
         currency_dict=currencies_per_symbol_dict[currency]
         chain_addr=currency_dict['exodus']
