@@ -104,14 +104,21 @@ function AdressController($scope, $http) {
 	var file = 'addr/' + myURLParams['addr'] + '.json';	
 	var currencyName = myURLParams['currency'];
         if (currencyName == 'MSC') {
-           currencyNumber = 0;
+           currencyIdentity = "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P-1";
         }	
         if (currencyName == 'TMSC') {
-           currencyNumber = 1;
+           currencyIdentity = "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P-2";
+        }
+        if (currencyName == 'GRZ') {
+           currencyIdentity = "1GRazCon4gDqTh1pMNyh1xHVWnbQEVPfW8-1";
         }	
+        if (currencyName == 'TGRZ') {
+           currencyIdentity = "1GRazCon4gDqTh1pMNyh1xHVWnbQEVPfW8-2";
+        }
+	
         // Make the http request and process the result
         $http.get(file, {}).success(function (data, status, headers, config) {
-            $scope.addressInformation = data[currencyNumber];
+            $scope.addressInformation = data[currencyIdentity];
         });
     }
 
