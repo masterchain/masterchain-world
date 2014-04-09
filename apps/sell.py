@@ -22,11 +22,11 @@ def sell_form_response(response_dict):
         if len(response_dict[field]) != 1:
             return (None, 'Multiple values for field '+field)
             
-    seller=response_dict['seller'][0]
+    seller=response_dict['seller'][0].strip()
     if not is_valid_bitcoin_address_or_pubkey(seller):
         return (None, 'Buyer is neither bitcoin address nor pubkey')
 
-    action_name=response_dict['action'][0]
+    action_name=response_dict['action'][0].strip()
     if action_name != 'New' and action_name != 'Update' and action_name != 'Cancel':
         return (None, 'Action must be New/Update/Cancel')
     if action_name == 'New':
@@ -36,37 +36,37 @@ def sell_form_response(response_dict):
     if action_name == 'Cancel':
         action=3
 
-    amount=response_dict['amount'][0]
+    amount=response_dict['amount'][0].strip()
     try:
         if float(amount)<0 or float(amount)>max_currency_value:
             return (None, 'Invalid amount')
     except ValueError:
         return (None, "amount must be a number")
-    price=response_dict['price'][0]
+    price=response_dict['price'][0].strip()
     try:
         if float(price)<0 or float(price)>max_currency_value:
             return (None, 'Invalid price')
     except ValueError:
         return (None, "price must be a number")
-    min_buyer_fee=response_dict['min_buyer_fee'][0]
+    min_buyer_fee=response_dict['min_buyer_fee'][0].strip()
     try:
         if float(min_buyer_fee)<0 or float(min_buyer_fee)>max_currency_value:
             return (None, 'Invalid minimal buyer fee')
     except ValueError:
         return (None, "buyer fee must be a number")
-    fee=response_dict['fee'][0]
+    fee=response_dict['fee'][0].strip()
     try:
         if float(fee)<0 or float(fee)>max_currency_value:
             return (None, 'Invalid fee')
     except ValueError:
         return (None, "fee must be a number")
     try:
-        blocks=int(response_dict['blocks'][0])
+        blocks=int(response_dict['blocks'][0].strip())
     except ValueError:
         return (None, "payment timeframe must be a number")
     if blocks<1 or blocks>max_payment_timeframe:
         return (None, 'Invalid payment timeframe')
-    currency=response_dict['currency'][0]
+    currency=response_dict['currency'][0].strip()
 
     if currency == 'BTC':
         return (None, 'Selling BTC is currently not supported')

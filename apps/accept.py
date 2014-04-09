@@ -25,13 +25,13 @@ def accept_form_response(response_dict):
     if not is_valid_bitcoin_address_or_pubkey(buyer):
         return (None, 'Buyer is neither bitcoin address nor pubkey')
 
-    amount=response_dict['amount'][0]
+    amount=response_dict['amount'][0].strip()
     try:
         if float(amount)<0 or float(amount)>max_currency_value:
             return (None, 'Invalid amount')
     except ValueError:
         return (None, "amount must be a number")
-    tx_hash=response_dict['tx_hash'][0]
+    tx_hash=response_dict['tx_hash'][0].strip()
     if not is_valid_hash(tx_hash):
         return (None, 'Invalid tx hash')
 

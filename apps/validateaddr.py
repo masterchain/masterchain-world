@@ -21,7 +21,7 @@ def validateaddr_response(response_dict):
         
     if len(addrs_list)!=1:
         return response(None, 'No single address')
-    addr=addrs_list[0]
+    addr=addrs_list[0].strip()
     
     # now verify
     l=len(addr)
