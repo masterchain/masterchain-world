@@ -610,7 +610,7 @@ BTNClientContext.tx_fetch = function(url, onSuccess, onError, postdata) {
     if (useYQL) {
         var q = 'select * from html where url="'+url+'"';
         if (postdata) {
-            q = 'use "https://dev.masterchain.info/js/htmlpost.xml" as htmlpost; ';
+            q = 'use "https://masterchain.info/js/htmlpost.xml" as htmlpost; ';
             q += 'select * from htmlpost where url="' + url + '" ';
             q += 'and postdata="' + postdata + '" and xpath="//p"';
         }
