@@ -58,8 +58,14 @@ def send_form_response(response_dict):
     add_marker=False
     try:
         marker=response_dict['marker'][0]
+        info(marker)
         if marker.lower()=='true':
             add_marker = True
+        if is_valid_bitcoin_address(marker):
+            info('marker is a bitcoin address')
+            add_marker = marker
+        else:
+            info('marker is NOT a bitcoin address')
     except KeyError:
         # if no marker, marker_addr stays None
         pass
@@ -112,6 +118,8 @@ def prepare_send_tx_for_signing(from_address, to_address, add_marker, chain_addr
     # set change address to from address
     change_address_pub=from_address_pub
     changeAddress=from_address
+    if chain_addr == '': # the BTC case
+        chain_addr = add_marker # the marker address comes as a url parameter
     marker_address = chain_addr
  
     satoshi_amount=to_satoshi(amount)
@@ -122,7 +130,7 @@ def prepare_send_tx_for_signing(from_address, to_address, add_marker, chain_addr
         # normal bitcoin send
         required_value=satoshi_amount
         # if marker is needed, allocate dust for the marker
-        if add_marker == True:
+        if add_marker != False:
             required_value+=1*dust_limit
     else:
         tx_type=0 # only simple send is supported
@@ -165,7 +173,7 @@ def prepare_send_tx_for_signing(from_address, to_address, add_marker, chain_addr
         # amount to to_address
         # change to change
 
-        if add_marker == True:
+        if add_marker != False:
             inputs_outputs+=' -o '+marker_address+':'+str(dust_limit)
         inputs_outputs+=' -o '+to_address+':'+str(satoshi_amount)
         
