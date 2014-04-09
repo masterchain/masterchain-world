@@ -636,8 +636,15 @@ function WalletController($scope, $http, $q) {
     	// Make the http request and process the result
         $http.get(file, {}).success(function (data, status, headers, config) {
             var last_transactions=new Array();
-            last_transactions=getLastTransactionFromData(last_transactions,data[0],'MSC');
-            last_transactions=getLastTransactionFromData(last_transactions,data[1],'TMSC');
+            var currency_symbols = Object.keys($scope.extracted_currencies);
+            for (var i = 1; i < currency_symbols.length; i++) {
+                var exo=$scope.extracted_currencies[currency_symbols[i]].exodus;
+                var cid=exo+'-'+$scope.extracted_currencies[currency_symbols[i]].currency_id;
+                //console.log(cid)
+                //console.log(currency_symbols[i]);
+                last_transactions=getLastTransactionFromData(last_transactions,data[cid],currency_symbols[i]);
+            }
+            console.log(last_transactions);
             $scope.lastTransactions=last_transactions;
         });
     }
@@ -731,6 +738,14 @@ function WalletController($scope, $http, $q) {
                 callback(data);
             });
         };
+
+        //Get extracted currencies (extracted_currencies.json)
+        $http.get('general/extracted_currencies.json', {}).success(function (data, status, headers, config) {
+            $scope.extracted_currencies = data[0];
+
+        }).then(function () {
+            console.log('finished getting extracted currencies');
+        });
 
         //Get currencies
         $http.get('currencies.json', {}).success(function (data, status, headers, config) {
