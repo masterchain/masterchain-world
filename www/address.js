@@ -102,22 +102,21 @@ function AdressController($scope, $http) {
 		height: 130,
 		text: myURLParams['addr']
 		});
-	var file = 'addr/' + myURLParams['addr'] + '.json';	
 	var currencyName = myURLParams['currency'];
-        if (currencyName == 'MSC') {
-           currencyIdentity = "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P-1";
-        }	
-        if (currencyName == 'TMSC') {
-           currencyIdentity = "1EXoDusjGwvnjZUyKkxZ4UHEf77z6A5S4P-2";
-        }
-        if (currencyName == 'GRZ') {
-           currencyIdentity = "1GRazCon4gDqTh1pMNyh1xHVWnbQEVPfW8-1";
-        }	
-        if (currencyName == 'TGRZ') {
-           currencyIdentity = "1GRazCon4gDqTh1pMNyh1xHVWnbQEVPfW8-2";
-        }
-	
-        // Make the http request and process the result
+        var currencyIdentity;	
+        // Make the http request for extracted_currencies and process the result
+	var file = 'general/extracted_currencies.json';	
+        $http.get(file, {}).success(function (data, status, headers, config) {
+            $scope.extracted_currencies = data;
+            // get positive balances
+            var currencies_list = data[0];
+            exo=currencies_list[currencyName].exodus;
+            id=currencies_list[currencyName].currency_id;
+            currencyIdentity=exo+'-'+id;
+            //console.log(currencyIdentity);
+        });
+        // Make the http request for address and process the result
+	var file = 'addr/' + myURLParams['addr'] + '.json';	
         $http.get(file, {}).success(function (data, status, headers, config) {
             $scope.addressInformation = data[currencyIdentity];
             // get positive balances
