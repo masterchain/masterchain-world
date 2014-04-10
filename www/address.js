@@ -8,6 +8,7 @@
 
 function AdressController($scope, $http) {
     $scope.addressInformation = {};
+    $scope.addressBalance = {};
     $scope.theAddress = "";
     $scope.footer = "FOOTER";
     $scope.title = "TITLE";
@@ -119,6 +120,18 @@ function AdressController($scope, $http) {
         // Make the http request and process the result
         $http.get(file, {}).success(function (data, status, headers, config) {
             $scope.addressInformation = data[currencyIdentity];
+            // get positive balances
+            var balance = data['balance'];
+            var length = balance.length;
+            var j = 1;
+            var url = BTCUtils.getUrl();
+            for (var i = 0; i < length; i++) {
+                if (balance[i].value != 0.0) {
+                    balance[i].newUrl = BTCUtils.replaceCurrency(url, balance[i].symbol);
+                    $scope.addressBalance[j]=balance[i];
+                    j=j+1;
+                }
+            }
         });
     }
 

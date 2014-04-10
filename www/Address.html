@@ -96,6 +96,14 @@
                                     <td><span class="pull-right">{{theAddress}}</span></td>
                                  </tr>
                                  <tr>
+                                    <td class="captionTd1">Funds</td>
+                                    <td class="btnCell">
+                                    <span ng-repeat="coin in addressBalance">
+                                        <a href="{{coin.newUrl}}"><button type="button" class="pull-right btc-tbl-btn btn btn-success btn-xs"}>{{coin.symbol}}</button></a>
+                                    </span>
+                                    </td>
+                                 </tr>
+                                 <tr>
                                     <td class="captionTd1">Tools</td>
                                     <td class="btnCell">
                                        <button type="button" ng-click="AddToWalletClick()" class="btc-tbl-btn pull-right btn btn-success btn-xs">Add to wallet</button>
@@ -111,16 +119,11 @@
                         <div class="row">
                            <div class="col-md-6">
                               <table class="table table-striped table-hover table-condensed">
-                                 <caption>Balance Information</caption>
+                                 <caption>Balance of {{currency}}</caption>
                                  <tbody>
                                     <tr>
                                        <td>Final balance</td>
                                        <td><strong>{{addressInformation.balance}}</strong>
-                                       </td>
-                                    </tr>
-                                    <tr>
-                                       <td>Reserved</td>
-                                       <td>{{addressInformation.total_reserved}}
                                        </td>
                                     </tr>
                                     <tr>
@@ -157,15 +160,12 @@
                            </div>
                            <div class="col-md-6">
                               <table class="table table-striped table-hover table-condensed">
-                                 <caption>Other Information</caption>
+                                 <caption>More {{currency}} info</caption>
                                  <tbody>
                                     <tr>
-                                       <td>Currency</td>
-                                       <td><strong>{{currency}}</strong></td>
-                                    </tr>
-                                    <tr>
-                                       <td></td>
-                                       <td></td>
+                                       <td>Reserved</td>
+                                       <td>{{addressInformation.total_reserved}}
+                                       </td>
                                     </tr>
                                     <tr>
                                        <td>Exodus transactions</td>
@@ -202,7 +202,7 @@
                         <div class="row" ng-show="addressInformation.exodus_transactions.length">
                            <div class="col-md-12">
                               <table class="table table-striped table-hover table-condensed">
-                                 <caption>Exodus transactions ({{addressInformation.exodus_transactions.length}})</caption>
+                                 <caption>Exodus {{currency}} transactions ({{addressInformation.exodus_transactions.length}})</caption>
                                  <thead>
                                     <tr>
                                        <th>Transaction</th>
@@ -231,7 +231,7 @@
                         <div class="row" ng-show="addressInformation.sold_transactions.length">
                            <div class="col-md-12">
                               <table class="table table-striped table-hover table-condensed">
-                                 <caption>Sold coins ({{addressInformation.sold_transactions.length}})</caption>
+                                 <caption>Sold {{currency}} coins ({{addressInformation.sold_transactions.length}})</caption>
                                  <thead>
                                     <tr>
                                        <th>Transaction</th>
@@ -260,7 +260,7 @@
                         <div class="row" ng-show="addressInformation.bought_transactions.length">
                            <div class="col-md-12">
                               <table class="table table-striped table-hover table-condensed">
-                                 <caption>Bought coins ({{addressInformation.bought_transactions.length}})</caption>
+                                 <caption>Bought {{currency}} coins ({{addressInformation.bought_transactions.length}})</caption>
                                  <thead>
                                     <tr>
                                        <th>Payment</th>
@@ -297,7 +297,7 @@
                         <div class="row" ng-show="addressInformation.offer_transactions.length">
                            <div class="col-md-12">
                               <table class="table table-striped table-hover table-condensed">
-                                 <caption>Sell offers ({{addressInformation.offer_transactions.length}})</caption>
+                                 <caption>Sell {{currency}} offers ({{addressInformation.offer_transactions.length}})</caption>
                                  <thead>
                                     <tr>
                                        <th>Transaction</th>
@@ -326,7 +326,7 @@
                         <div class="row" ng-show="addressInformation.accept_transactions.length">
                            <div class="col-md-12">
                               <table class="table table-striped table-hover table-condensed">
-                                 <caption>Sell accepts ({{addressInformation.accept_transactions.length}})</caption>
+                                 <caption>Sell {{currency}} accepts ({{addressInformation.accept_transactions.length}})</caption>
                                  <thead>
                                     <tr>
                                        <th>Transaction</th>
@@ -355,7 +355,7 @@
                         <div class="row" ng-show="addressInformation.received_transactions.length">
                            <div class="col-md-12">
                               <table class="table table-condensed">
-                                 <caption>Received transactions ({{addressInformation.received_transactions.length}})</caption>
+                                 <caption>Received {{currency}} transactions ({{addressInformation.received_transactions.length}})</caption>
                                  <thead>
                                     <tr>
                                        <th>Transaction</th>
@@ -387,7 +387,7 @@
                            <!--SENT TRANSACTIONS-->
                            <div class="col-md-12">
                               <table class="table table-condensed">
-                                 <caption>Sent transactions ({{addressInformation.sent_transactions.length}})</caption>
+                                 <caption>Sent {{currency}} transactions ({{addressInformation.sent_transactions.length}})</caption>
                                  <thead>
                                     <tr>
                                        <th>Transaction</th>
