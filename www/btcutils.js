@@ -38,8 +38,8 @@ BTCUtils.getQueryStringArgs = function () {
 	//assign each item onto the args object
 	for (i=0; i < len; i++){
 		item = items[i].split("=");
-		name = decodeURIComponent(item[0]);
-		value = decodeURIComponent(item[1]);
+		name = encodeURIComponent(item[0]);
+		value = encodeURIComponent(item[1]);
 		if (name.length) {
 			args[name] = value;
 		}
