@@ -460,9 +460,9 @@ var status = data.status;
 if (!status)
 	status = data.error;
 if (status && status != "OK" && status != "Ok" && status != "ok") {
-if (status.length > 120) {
-    //take first 40 and add ...
-    status = status.substr(0, 40);
+if (status.length > 60) {
+    //take first 57 and add ...
+    status = status.substr(0, 37);
     status += "...";
 }
 
