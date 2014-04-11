@@ -802,7 +802,9 @@ function WalletController($scope, $http, $q) {
                         currency: currency
                     };
 
-                    dataBalance.push(item);
+                    if (item.value > 0) {
+                        dataBalance.push(item);
+                    }
                 }
                 var data = {
                     balance: dataBalance,
