@@ -18,20 +18,20 @@ def accept_form_response(response_dict):
     expected_fields=['buyer', 'amount', 'tx_hash']
     for field in expected_fields:
         if not response_dict.has_key(field):
-            return (None, 'No field '+field+' in response dict '+str(response_dict))
+            return (None, 'No field '+field)
         if len(response_dict[field]) != 1:
             return (None, 'Multiple values for field '+field)
     buyer=response_dict['buyer'][0].strip()
     if not is_valid_bitcoin_address_or_pubkey(buyer):
         return (None, 'Buyer is neither bitcoin address nor pubkey')
 
-    amount=response_dict['amount'][0].strip()
+    amount=get_response_field(response_dict, 'amount')
     try:
         if float(amount)<0 or float(amount)>max_currency_value:
             return (None, 'Invalid amount')
     except ValueError:
         return (None, "amount must be a number")
-    tx_hash=response_dict['tx_hash'][0].strip()
+    tx_hash=get_response_field(response_dict, 'tx_hash')
     if not is_valid_hash(tx_hash):
         return (None, 'Invalid tx hash')
 

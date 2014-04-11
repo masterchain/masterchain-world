@@ -10,12 +10,16 @@
 
 import urlparse
 import os, sys
+from urllib2 import quote
 lib_path = os.path.abspath('../../mastercoin-tools')
 sys.path.append(lib_path)
 from msc_utils_parsing import *
 
 http_status = '200 OK'
 error_not_enough_funds = 'Not enough bitcoin funds on address'
+
+def get_response_field(response_dict, field_name):
+    return quote(response_dict[field_name][0].strip().encode("utf8"))
 
 def response_with_error(start_response, environ, response_body):
     headers = [('Content-type', 'application/json')]

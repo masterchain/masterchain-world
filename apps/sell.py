@@ -18,15 +18,15 @@ def sell_form_response(response_dict):
     expected_fields=['seller', 'action', 'amount', 'price', 'min_buyer_fee', 'fee', 'blocks', 'currency']
     for field in expected_fields:
         if not response_dict.has_key(field):
-            return (None, 'No field '+field+' in response dict '+str(response_dict))
+            return (None, 'No field '+field)
         if len(response_dict[field]) != 1:
             return (None, 'Multiple values for field '+field)
             
-    seller=response_dict['seller'][0].strip()
+    seller=get_response_field(response_dict, 'seller')
     if not is_valid_bitcoin_address_or_pubkey(seller):
         return (None, 'Buyer is neither bitcoin address nor pubkey')
 
-    action_name=response_dict['action'][0].strip()
+    action_name=get_response_field(response_dict, 'action')
     if action_name != 'New' and action_name != 'Update' and action_name != 'Cancel':
         return (None, 'Action must be New/Update/Cancel')
     if action_name == 'New':
@@ -36,37 +36,37 @@ def sell_form_response(response_dict):
     if action_name == 'Cancel':
         action=3
 
-    amount=response_dict['amount'][0].strip()
+    amount=get_response_field(response_dict, 'amount')
     try:
         if float(amount)<0 or float(amount)>max_currency_value:
             return (None, 'Invalid amount')
     except ValueError:
         return (None, "amount must be a number")
-    price=response_dict['price'][0].strip()
+    price=get_response_field(response_dict, 'price')
     try:
         if float(price)<0 or float(price)>max_currency_value:
             return (None, 'Invalid price')
     except ValueError:
         return (None, "price must be a number")
-    min_buyer_fee=response_dict['min_buyer_fee'][0].strip()
+    min_buyer_fee=get_response_field(response_dict, 'min_buyer_fee')
     try:
         if float(min_buyer_fee)<0 or float(min_buyer_fee)>max_currency_value:
             return (None, 'Invalid minimal buyer fee')
     except ValueError:
         return (None, "buyer fee must be a number")
-    fee=response_dict['fee'][0].strip()
+    fee=get_response_field(response_dict, 'fee')
     try:
         if float(fee)<0 or float(fee)>max_currency_value:
             return (None, 'Invalid fee')
     except ValueError:
         return (None, "fee must be a number")
     try:
-        blocks=int(response_dict['blocks'][0].strip())
+        blocks=int(get_response_field(response_dict, 'blocks'))
     except ValueError:
         return (None, "payment timeframe must be a number")
     if blocks<1 or blocks>max_payment_timeframe:
         return (None, 'Invalid payment timeframe')
-    currency=response_dict['currency'][0].strip()
+    currency=get_response_field(response_dict, 'currency')
 
     if currency == 'BTC':
         return (None, 'Selling BTC is currently not supported')

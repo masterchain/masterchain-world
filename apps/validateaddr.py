@@ -15,13 +15,14 @@ from msc_apps import *
 def validateaddr_response(response_dict):
     info(response_dict)
     try:
-        addrs_list=response_dict['addr']
+        response_dict['addr']
     except KeyError:
         return (None, 'No address in dictionary')
         
-    if len(addrs_list)!=1:
+    if len(response_dict['addr'])!=1:
         return response(None, 'No single address')
-    addr=addrs_list[0].strip()
+
+    addr=get_response_field(response_dict, 'addr')
     
     # now verify
     l=len(addr)

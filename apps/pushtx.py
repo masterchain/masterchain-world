@@ -17,11 +17,11 @@ def pushtx_response(response_dict):
     expected_fields=['signedTransaction']
     for field in expected_fields:
         if not response_dict.has_key(field):
-            return (None, 'No field '+field+' in response dict '+str(response_dict))
+            return (None, 'No field '+field)
         if len(response_dict[field]) != 1:
             return (None, 'Multiple values for field '+field)
             
-    signed_tx=response_dict['signedTransaction'][0]
+    signed_tx=get_response_field(response_dict, 'signedTransaction')
     
     response_status='OK'
     pushed=pushtx(signed_tx)

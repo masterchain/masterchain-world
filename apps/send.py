@@ -19,32 +19,32 @@ def send_form_response(response_dict):
     # if marker is True, send dust to marker (for payments of sells)
     for field in expected_fields:
         if not response_dict.has_key(field):
-            info('No field '+field+' in response dict '+str(response_dict))
-            return (None, 'No field '+field+' in response dict '+str(response_dict))
+            info('No field '+field)
+            return (None, 'No field '+field)
         if len(response_dict[field]) != 1:
             info('Multiple values for field '+field)
             return (None, 'Multiple values for field '+field)
            
-    from_addr=response_dict['from_address'][0].strip()
+    from_addr=get_response_field(response_dict, 'from_address')
     if not is_valid_bitcoin_address_or_pubkey(from_addr):
         return (None, 'From address is neither bitcoin address nor pubkey')
-    to_addr=response_dict['to_address'][0].strip()
+    to_addr=get_response_field(response_dict, 'to_address')
     if not is_valid_bitcoin_address(to_addr):
         return (None, 'To address is not a bitcoin address')
-    amount=response_dict['amount'][0].strip()
+    amount=get_response_field(response_dict, 'amount')
     try:
         if float(amount)<0 or float(amount)>max_currency_value:
             return (None, 'Invalid amount')
     except ValueError:
         return (None, "amount must be a number")
-    btc_fee=response_dict['fee'][0].strip()
+    btc_fee=get_response_field(response_dict, 'fee')
     try:
         if float(btc_fee)<0 or float(btc_fee)>max_currency_value:
             return (None, 'Invalid fee')
     except ValueError:
         return (None, "fee must be a number")
 
-    currency=response_dict['currency'][0].strip()
+    currency=get_response_field(response_dict, 'currency')
     chain_addr='undefined'
     try:
         currency_dict=currencies_per_symbol_dict[currency]
@@ -57,7 +57,7 @@ def send_form_response(response_dict):
 
     add_marker=False
     try:
-        marker=response_dict['marker'][0].strip()
+        marker=get_response_field(response_dict, 'marker')
         info(marker)
         if marker.lower()=='true':
             add_marker = True
