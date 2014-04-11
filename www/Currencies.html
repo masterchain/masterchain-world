@@ -95,8 +95,11 @@
                                  <thead>
                                     <tr>
                                        <th>Currency</th>
-                                       <th>Amount minted</th>
                                        <th>USD price</th>
+                                       <th>Amount minted</th>
+                                       <th>Date minted</th>
+                                       <th>Total donations</th>
+                                       <th>Paid to masterchain</th>
                                    </tr>
                                  </thead>
                                  <tbody>
@@ -104,8 +107,11 @@
                                        <td>
                                           <a ng-href="index.html?&currency={{c.symbol}}">{{c.name}}</a>
                                        </td>
-                                       <td>{{c.amount_minted}}</td>
                                        <td>{{c.dollar}}</td>
+                                       <td>{{c.amount_minted}}</td>
+                                       <td>{{c.time | date:'dd MMM HH:mm'}}</td>
+                                       <td>{{c.donation}}</td>
+                                       <td>{{c.payment}}</td>
                                     </tr>
                                  </tbody>
                               </table>

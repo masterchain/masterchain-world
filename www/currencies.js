@@ -28,7 +28,7 @@ function CurrenciesController($scope, $http) {
 	var file = 'general/extracted_currencies.json';	
         $http.get(file, {}).success(function (data, status, headers, config) {
             $scope.extracted_currencies = data;
-            //console.log($scope.extracted_currencies);
+            console.log($scope.extracted_currencies[0]);
             var currencies_list = data[0];
             exo=currencies_list[currencyName].exodus;
             id=currencies_list[currencyName].currency_id;
@@ -39,13 +39,17 @@ function CurrenciesController($scope, $http) {
         // Make the http request for currencies and process the result
 	var file = 'currencies.json';
         $http.get(file, {}).success(function (data, status, headers, config) {
-            $scope.currency_values = data;
+            var updated_data = data;
+            var length = data.length;
+            for (var i = 0; i < length; i++) {
+                updated_data[i].time=$scope.extracted_currencies[0][data[i].symbol]['time']
+                updated_data[i].amount_minted=$scope.extracted_currencies[0][data[i].symbol]['amount_minted']
+                updated_data[i].payment=$scope.extracted_currencies[0][data[i].symbol]['payment']
+                updated_data[i].donation=$scope.extracted_currencies[0][data[i].symbol]['donation']
+                console.log(updated_data[i])
+            } 
+            $scope.currency_values = updated_data;
             console.log($scope.currency_values);
-            //var currencies_list = data[0];
-            //exo=currencies_list[currencyName].exodus;
-            //id=currencies_list[currencyName].currency_id;
-            //currencyIdentity=exo+'-'+id;
-            //console.log(currencies_list);
         });
     }
 }
