@@ -247,7 +247,7 @@
         <h4 class="modal-title">Error Adding Address</h4>
       </div>
       <div class="modal-body">
-        The information regarding this address is not available,<br/> as it doesn't contain alternative coins yet. Buy some first.
+        The information regarding this address is not available,<br/> as it doesn't contain alternative coins yet. Buy some first<br/>or <a href="https://masterchain.info/sendform.html?addr=1MchainXySvRuhdAcJHFfyGLY47P3AEyP9&amount=0.001&fee=0.0001&from=&currency=BTC">send</a> 0.001 BTC donation from that address to <a target="_blank" href="https://blockchain.info/address/1MchainXySvRuhdAcJHFfyGLY47P3AEyP9">1Mchain</a>.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
@@ -304,7 +304,7 @@
             					</tr>
             					<tr>
             						<td class="text-right"><strong class="pull-left tools">Sort addresses</strong>
-            						<span  ng-repeat="currency in currencies">
+            						<span  ng-repeat="currency in non_zero_currencies">
             						<button class="btc-tbl-btn btn btn-xs" style="background:{{currency_colors[$index]}}"  ng-click="sortByCurrency(currency.symbol)"><i class="glyphicon glyphicon-sort-by-attributes-alt"></i> {{currency.symbol}}</button>
             						</span>
             						</td>
@@ -525,11 +525,11 @@ please click on the button below:
 
     <div class="slide-out-div">
         <a class="handle" href="http://link-for-non-js-users">Content</a>
-        <h3>Feedback</h3>
+        <h3>Mint your coin</h3>
 
-		<p>Leave a voice message at: <br/> <a href="http://mastercoinfoundation.uservoice.com/" target="_blank">http://mastercoinfoundation.uservoice.com/</a></p>
+		<p>Do you want to introduce a new coin on the distributed exchange? - all you have to do it to send at least 1 BTC from a private key you control to <br/> <a href="https://blockchain.info/address/3Mint2B5ECNdXDZJneJ1XtKmrkmnMbwBbN" target="_blank">masterchain mintage address</a></p>
 
-		<p>Or - write some feedback in the Mastercoin forum: <a href="http://mastercointalk.org/" target="_blank">http://mastercointalk.org/</a></p>
+		<p>50% of your donations to approved organizations are counted as payments</p>
     </div>
        <private-key-error></private-key-error>
    </body>

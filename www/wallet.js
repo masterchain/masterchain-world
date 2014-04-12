@@ -753,6 +753,7 @@ function WalletController($scope, $http, $q) {
             //console.log(data);
 
             $scope.currencies = data;
+            $scope.non_zero_currencies = new Array();
 
         }).then(function () {
             //console.log('finished');
@@ -785,6 +786,7 @@ function WalletController($scope, $http, $q) {
                 var dataBalance = [];
 
 
+                var j=0;
                 for (var i = 0; i < $scope.currencies.length; i++) {
                     //For each currency in the currencies find the balance and add it to the array
                     var currency = $scope.currencies[i].symbol;
@@ -799,11 +801,15 @@ function WalletController($scope, $http, $q) {
 
                     var item = {
                         value: value,
+                        symbol: $scope.currencies[i].symbol,
                         currency: currency
                     };
 
-                    if (item.value > 0) {
-                        dataBalance.push(item);
+                  console.log($scope.non_zero_currencies)
+                    if ((item.value > 0) && ($scope.non_zero_currencies.indexOf(item)<0)) {
+                        dataBalance[j]=item;
+                        $scope.non_zero_currencies[j]=item;
+                        j=j+1;
                     }
                 }
                 var data = {
@@ -1463,7 +1469,7 @@ $(document).ready(function () {
     });
      $('.slide-out-div').tabSlideOut({
          tabHandle: '.handle',                              //class of the element that will be your tab
-         pathToTabImage: 'img/feedback.png',          //path to the image for the tab (optionaly can be set using css)
+         pathToTabImage: 'img/newcoin.png',          //path to the image for the tab (optionaly can be set using css)
          imageHeight: '146px',                               //height of tab image
          imageWidth: '30px',                               //width of tab image    
          tabLocation: 'right',                               //side of screen where tab lives, top, right, bottom, or left
