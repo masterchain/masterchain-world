@@ -105,8 +105,8 @@ function AdressController($scope, $http) {
 	var currencyName = myURLParams['currency'];
         var currencyIdentity;	
         // Make the http request for extracted_currencies and process the result
-	var file = 'general/extracted_currencies.json';	
-        $http.get(file, {}).success(function (data, status, headers, config) {
+	var extracted_currencies_file = 'general/extracted_currencies.json';	
+        $http.get(extracted_currencies_file, {}).success(function (data, status, headers, config) {
             $scope.extracted_currencies = data;
             var currencies_list = data[0];
             exo=currencies_list[currencyName].exodus;
