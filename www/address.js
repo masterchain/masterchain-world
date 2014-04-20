@@ -113,23 +113,24 @@ function AdressController($scope, $http) {
             id=currencies_list[currencyName].currency_id;
             currencyIdentity=exo+'-'+id;
             //console.log(currencyIdentity);
-        });
-        // Make the http request for address and process the result
-	var file = 'addr/' + myURLParams['addr'] + '.json';	
-        $http.get(file, {}).success(function (data, status, headers, config) {
-            $scope.addressInformation = data[currencyIdentity];
-            // get positive balances
-            var balance = data['balance'];
-            var length = balance.length;
-            var j = 1;
-            var url = BTCUtils.getUrl();
-            for (var i = 0; i < length; i++) {
-                if (balance[i].value != 0.0) {
-                    balance[i].newUrl = BTCUtils.replaceCurrency(url, balance[i].symbol);
-                    $scope.addressBalance[j]=balance[i];
-                    j=j+1;
+
+            // Make the http request for address and process the result
+	    var file = 'addr/' + myURLParams['addr'] + '.json';	
+            $http.get(file, {}).success(function (data, status, headers, config) {
+                $scope.addressInformation = data[currencyIdentity];
+                // get positive balances
+                var balance = data['balance'];
+                var length = balance.length;
+                var j = 1;
+                var url = BTCUtils.getUrl();
+                for (var i = 0; i < length; i++) {
+                    if (balance[i].value != 0.0) {
+                        balance[i].newUrl = BTCUtils.replaceCurrency(url, balance[i].symbol);
+                        $scope.addressBalance[j]=balance[i];
+                        j=j+1;
+                    }
                 }
-            }
+            });
         });
     }
 
