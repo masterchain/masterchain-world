@@ -635,7 +635,7 @@ BTNClientContext.tx_fetch = function(url, onSuccess, onError, postdata) {
         success: function(res) {
             $('#sendLoader').removeClass('showUntilAjax');
 	    
-	    $('#sendMessage').text('Transaction sent');
+	    $('#sendMessage').text('Transaction sent - do not forget to PAY for this accept offer');
 	    $('#sendMessage').addClass('greenTextColor');
 	    $('#sendMessage').show();
 
