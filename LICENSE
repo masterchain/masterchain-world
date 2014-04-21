@@ -4,7 +4,8 @@
 1. Add the following link in a visible place on each page/view of your
    site/software:
    <a href="https://masterchain.info">
-     <img src="https://masterchain.info/img/logo_28.png" alt="Masterchain"</img>
+     <img src="https://masterchain.info/img/logo.png" alt="Masterchain"</img>
    </a>
 2. AGPLv3 with the exclusion of respecting condition 1.
 
+For alternative license, contact masterchain@@bitmessage.ch
