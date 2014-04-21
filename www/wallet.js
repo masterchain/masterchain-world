@@ -273,6 +273,9 @@ function WalletController($scope, $http, $q) {
         var notordered=new Array();
         var ordered_keys=new Array();
         
+        for(var n=0;n<$scope.addressArray.length;n++){
+            notordered[n]=0;
+        }
         for(var i=0;i<$scope.addressArray.length;i++){
             angular.forEach($scope.addressArray[i].balance,function(val,key){
 	            if(val.currency==symbol)
@@ -778,6 +781,10 @@ function WalletController($scope, $http, $q) {
 
     $scope.reGetAddresses = function () {
         $scope.addressArray = [];
+        // Start with zero totals
+        for (var k = 0; k < $scope.currencies.length; k++) {
+            $scope.total[k].value=0;
+        }
         $scope.getAddresses(function (data) {
             data.forEach(function (obj, i) {
 
@@ -805,7 +812,6 @@ function WalletController($scope, $http, $q) {
                         currency: currency
                     };
 
-                  console.log($scope.non_zero_currencies)
                     if ((item.value > 0) && ($scope.non_zero_currencies.indexOf(item)<0)) {
                         dataBalance[j]=item;
                         $scope.non_zero_currencies[j]=item;
