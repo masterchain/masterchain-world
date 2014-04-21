@@ -326,6 +326,7 @@ function WalletController($scope, $http, $q) {
         $scope.currentWallets=JSON.stringify(wallets);
         localStorage[Wallet.StorageKey] = JSON.stringify(wallets); 
         //window.location.reload();
+        $scope.skip_adding_to_non_zero_total = true;
         $scope.reGetAddresses();
     }
     
@@ -647,7 +648,7 @@ function WalletController($scope, $http, $q) {
                 //console.log(currency_symbols[i]);
                 last_transactions=getLastTransactionFromData(last_transactions,data[cid],currency_symbols[i]);
             }
-            console.log(last_transactions);
+            //console.log(last_transactions);
             $scope.lastTransactions=last_transactions;
         });
     }
@@ -690,6 +691,8 @@ function WalletController($scope, $http, $q) {
         $scope.showAddress=!$scope.showAddress;
     } 
      
+    $scope.non_zero_currencies = new Array();
+    $scope.skip_adding_to_non_zero_total = false;
     $scope.getWalletData = function () {
     
     	var myURLParams = BTCUtils.getQueryStringArgs();
@@ -756,12 +759,12 @@ function WalletController($scope, $http, $q) {
             //console.log(data);
 
             $scope.currencies = data;
-            $scope.non_zero_currencies = new Array();
 
         }).then(function () {
             //console.log('finished');
 
             $scope.total = new Array();
+            $scope.non_zero_total = new Array();
             //Total
             for (var i = 0; i < $scope.currencies.length; i++) {
                 var itemTotal = {
@@ -775,7 +778,7 @@ function WalletController($scope, $http, $q) {
             //console.log($scope.total);
             $scope.reGetAddresses();
         });
-        console.log($scope.total);
+        //console.log($scope.total);
        
     }
 
@@ -785,15 +788,33 @@ function WalletController($scope, $http, $q) {
         for (var k = 0; k < $scope.currencies.length; k++) {
             $scope.total[k].value=0;
         }
+
+        var j=0; // currencies counter over all addresses
+
+        $scope.getSymbolIndex = function (item, only_non_zero) {
+            // only_non_zero checks in the $scope.non_zero_currencies
+            // otherwise check in $scope.currencies
+            if (only_non_zero == true) {
+                search_array=$scope.non_zero_currencies;
+            } else {
+                search_array=$scope.currencies;
+            }
+            for(var i=0;i<search_array.length;i++){
+                if (search_array[i].symbol == item.symbol) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         $scope.getAddresses(function (data) {
             data.forEach(function (obj, i) {
 
                 //Sort currencies as in the table and show only needed
+                var k=0; // currencies counter over this address
 
                 var dataBalance = [];
 
-
-                var j=0;
                 for (var i = 0; i < $scope.currencies.length; i++) {
                     //For each currency in the currencies find the balance and add it to the array
                     var currency = $scope.currencies[i].symbol;
@@ -812,12 +833,28 @@ function WalletController($scope, $http, $q) {
                         currency: currency
                     };
 
-                    if ((item.value > 0) && ($scope.non_zero_currencies.indexOf(item)<0)) {
-                        dataBalance[j]=item;
-                        $scope.non_zero_currencies[j]=item;
-                        j=j+1;
+                    if (item.value > 0) {
+                        var m = $scope.getSymbolIndex(item, true);
+                        if (m<0) {
+                            // adding new currency
+                            $scope.non_zero_currencies[j]=item;
+                            $scope.non_zero_total[j]=angular.copy(item);
+                            j=j+1;
+                        } else {
+                            // updating existing currency
+                            if ($scope.skip_adding_to_non_zero_total == false) {
+                                $scope.non_zero_total[m].value = $scope.non_zero_total[m].value + value;
+                            }
+                        }
+                        dataBalance[k]=item;
+                        k=k+1;
                     }
                 }
+
+
+                //console.log(dataBalance);
+                //console.log($scope.non_zero_currencies);
+
                 var data = {
                     balance: dataBalance,
                     address: obj.data.address,
