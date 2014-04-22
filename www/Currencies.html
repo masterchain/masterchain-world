@@ -102,7 +102,7 @@
                                        <th>Amount minted</th>
                                        <th>Market Cap [M$]</th>
                                        <th>Date minted</th>
-                                       <th>Payment</th>
+                                       <th>Payment [coins]</th>
                                        <th>Donations [$]</th>
                                    </tr>
                                  </thead>
@@ -117,7 +117,7 @@
                                        <td>{{c.total_paid}}</td>
                                        <td>{{c.amount_minted}}</td>
                                        <td>{{c.cap}}</td>
-                                       <td>{{c.time | date:'dd MMM HH:mm'}}</td>
+                                       <td>{{c.time | date:'dd MMM yyyy'}}</td>
                                        <td>{{c.payment}}</td>
                                        <td>{{c.usd_donation}}</td>
                                     </tr>
