@@ -1,0 +1,127 @@
+<!doctype html>
+
+<!--
+    Copyright Masterchain Grazcoin Grimentz 2013-2014
+    https://github.com/masterchain/masterchain-world
+    https://masterchain.info
+    masterchain@@bitmessage.ch
+    https://masterchain.info/LICENSE.txt
+-->
+
+<html ng-app="myApp">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+      <meta name="google" value="notranslate" />
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <link rel="shortcut icon" href="ico/favicon.png">
+      <title>
+         Donations
+      </title>
+      <noscript>
+         Java Script has been disabled!
+         <meta http-equiv="refresh" content="0;url=javascript_required.html">
+      </noscript>
+      <!-- Bootstrap core CSS -->
+      <link href="css/bootstrap.css" rel="stylesheet">
+      <link href="css/bootstrap-theme.css" rel="stylesheet">
+      <link href="css/bootstrap-combobox.css" rel="stylesheet"> 
+      <link href="css/search.css" rel="stylesheet">
+      <script src="js/jquery-1.10.1.min.js"></script>
+      <script src="js/jquery.tabSlideOut.v1.3.js"></script>
+      <script src="js/angular.js"></script>
+      <script src="btcutils.js"></script>
+      <script src="js/truncate.js"></script>
+      <script src="masterPage.js"></script>
+      <script src="btc02.js"></script>
+      <script src="js/bootstrap-combobox.js"></script>
+      <script>
+         var myApp = angular.module('myApp', ['truncate']);
+      </script>
+      <script src="js/bootstrap.min.js"></script>
+      <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+      <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+      <![endif]-->
+   </head>
+   <body>
+      <div id="wrap">
+         <div ng-controller="NavigationController" ng-init="getNavData()">
+            <!-- Fixed navbar -->
+            <div class="navbar navbar-default navbar-fixed-top">
+               <div class="container">
+                  <div class="navbar-header">
+                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     <span class="icon-bar"></span>
+                     </button>
+                     <a class="navbar-brand" href="/"><img src="img/logo.png" alt="mastercoin"></a>
+                  </div>
+                  <div class="navbar-collapse collapse">
+                     <ul class="nav navbar-nav navbar-right">
+                        <li class="c-visible-xs"><a href="wallet.html">Wallet</a></li>
+                        <li><a href="index.html?currency={{currency}}">Recent</a></li>
+                        <li><a href="index.html?filter=sell&currency={{currency}}">Orderbook</a></li>
+                        <li><a href="About.html">Info</a></li>
+                        <li>
+                           <a class="searchLI">
+                              <div id="searchContainer" class="search">
+                                 <select class="select optional combobox customDropdown"
+                                    id="searchText" name="searchText">
+                                 </select>
+                              </div>
+                           </a>
+                        </li>
+                     </ul>
+                  </div>
+               </div>
+            </div>
+            <div class="container page-container">
+                <div class="row">
+                    <div class="jumbotron">
+                        <h3><img src="img/about.png" /> Donations to charity</h3>
+                            <p>Donation addresses were taken from <a href="http://bitcoinsforcharity.org/charities" target="_blank">bitcoinsforcharity.org</a>.</p
+                            <p>Masterchain approved addresses are <a href="https://mint.masterchain.info/index.html?currency=DNT">marked</a> (by 0.00000001 Donate coin).</p>
+                            <p>Any donation to approved addresses is counted as 50% theoretical payment to masterchain, and adds value/reputation to your coin.</p>
+                            <p>To donate - add an output to a donation addres on your mint transaction (e.g. <a href="https://blockchain.info/tx/f3d024488694ad633d6eadf1d8cf4ec1e08af24fc3a6604489b8de0164b29ca7" target="_blank">Gold coin donation to FSF.org</a>).</p>
+                            <p>Check <a href="Currencies.html">statistics page</a> to see how much each coin issuer has already donated.</p>
+                            <p>Please suggest further donation addresses.</p>
+                    </div>
+                </div>
+            </div>
+                  <div class="left_bar jumbotron col-sm-3 col-sm-pull-9 col-md-2 col-md-pull-10">
+                     <nav>
+                        <div class="navItems col-xs-6 col-sm-12 no-padding" ng-repeat="val in values">
+                           <a href="{{val.newUrl}}" class="panel-link">
+                              <div class="panel panel-default {{val.selected}}">
+                                 <div class="panel-heading">
+                                    <img ng-src="img/{{val.trend}}Icon.png"/> {{val.name}}
+                                 </div>
+                                 <div class="panel-body" ng-style="{'background': val.trend2}">
+                                    <div class="col-xs-3 no-padding">{{val.currency}}</div>
+                                    <div class="col-xs-9">{{val.last_price}}</div>
+                                 </div>
+                              </div>
+                           </a>
+                        </div>
+                     </nav>
+                  </div>
+               </div>
+            </div>
+            <!-- /container -->
+         </div>
+         <div id="push"></div>
+      </div>
+      <div id="footer" ng-controller="RevisionController" ng-init="getData()">
+         <div class="container c-footer-container">
+            <div class="revision">Updated: {{revision.last_parsed}} rev <a href='{{revision.url}}'>{{revision.commit_hexsha|characters:6}}</a> ({{revision.commit_time}})</div>
+            <div class="muted credit">&copy; <a href="https://masterchain.info">Masterchain</a> Grazcoin Grimentz 2013-2014.</div>
+         </div>
+      </div>
+   </body>
+</html>
+
