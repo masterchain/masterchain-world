@@ -25,31 +25,78 @@ function CurrenciesController($scope, $http) {
         var currencyIdentity;	
 
         // Make the http request for extracted_currencies and process the result
-	var file = 'general/extracted_currencies.json';	
-        $http.get(file, {}).success(function (data, status, headers, config) {
-            $scope.extracted_currencies = data;
+	var extracted_currencies_file = 'general/extracted_currencies.json';	
+        $http.get(extracted_currencies_file, {}).success(function (extracted_data, status, headers, config) {
+            $scope.extracted_currencies = extracted_data;
             console.log($scope.extracted_currencies[0]);
-            var currencies_list = data[0];
+            var currencies_list = extracted_data[0];
             exo=currencies_list[currencyName].exodus;
             id=currencies_list[currencyName].currency_id;
             currencyIdentity=exo+'-'+id;
             //console.log(currencyIdentity);
-        });
 
-        // Make the http request for currencies and process the result
-	var file = 'currencies.json';
-        $http.get(file, {}).success(function (data, status, headers, config) {
-            var updated_data = data;
-            var length = data.length;
-            for (var i = 0; i < length; i++) {
-                updated_data[i].time=$scope.extracted_currencies[0][data[i].symbol]['time']
-                updated_data[i].amount_minted=$scope.extracted_currencies[0][data[i].symbol]['amount_minted']
-                updated_data[i].payment=$scope.extracted_currencies[0][data[i].symbol]['payment']
-                updated_data[i].donation=$scope.extracted_currencies[0][data[i].symbol]['donation']
-                console.log(updated_data[i])
-            } 
-            $scope.currency_values = updated_data;
-            console.log($scope.currency_values);
+            // Make the http request for currencies and process the result
+	    var currencies_file = 'currencies.json';
+            $http.get(currencies_file, {}).success(function (currencies_data, status, headers, config) {
+                var updated_data = currencies_data;
+                var length = currencies_data.length;
+                for (var i = 0; i < length; i++) {
+                    updated_data[i].time=$scope.extracted_currencies[0][currencies_data[i].symbol]['time']
+                    updated_data[i].amount_minted=$scope.extracted_currencies[0][currencies_data[i].symbol]['amount_minted']
+                    updated_data[i].payment=$scope.extracted_currencies[0][currencies_data[i].symbol]['payment']
+                    updated_data[i].donation=$scope.extracted_currencies[0][currencies_data[i].symbol]['donation']
+                    console.log('updated_data[i]')
+                    console.log(updated_data[i])
+                } 
+                //$scope.currency_values = updated_data;
+                //console.log($scope.currency_values);
+
+                // Make the http request for values and combine the result
+	        var values_file = 'values.json';
+                $http.get(values_file, {}).success(function (val_data, status, headers, config) {
+                    var values_data = val_data;
+                    var values_length = val_data.length;
+                    var currencies_length = currencies_data.length;
+                    // get BTC price
+                    var btc_price = 0;
+                    for (var k = 0; k < currencies_length; k++) {
+                        if (updated_data[k].dollar != 0) {
+                            btc_price = updated_data[k].dollar;
+                        }
+                    }
+                    for (var l = 0; l < currencies_length; l++) {
+                        var donation = updated_data[l].donation;
+                        if (donation != undefined) {
+                            updated_data[l].usd_donation = donation * btc_price;
+                        } else {
+                            updated_data[l].usd_donation = 0.0;
+                        }
+                    }
+                    for (var i = 0; i < values_length; i++) {
+                        if (values_data[i].last_price != undefined) {
+                            var symbol = values_data[i].currency;
+                            var last_price = values_data[i].last_price;
+                            var average_price = values_data[i].average_price;
+                            var total_paid = values_data[i].total_paid;
+                            for (var j = 0; j < currencies_length; j++) {
+                                if (updated_data[j].symbol == symbol) {
+                                    updated_data[j].last_price = last_price;
+                                    updated_data[j].average_price = average_price;
+                                    updated_data[j].total_paid = total_paid;
+                                    updated_data[j].dollar = last_price*btc_price;
+                                    var amount_minted = updated_data[j].amount_minted;
+                                    if (updated_data[j].symbol == "MSC") {
+                                        amount_minted = 619478.6
+                                    }
+                                    updated_data[j].cap = last_price*btc_price*amount_minted/1000000;
+                                }
+                            }
+                        }
+                    } 
+                    $scope.currency_values = updated_data;
+                    console.log($scope.currency_values);
+                });
+            });
         });
     }
 }

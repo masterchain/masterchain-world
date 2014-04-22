@@ -95,11 +95,15 @@
                                  <thead>
                                     <tr>
                                        <th>Currency</th>
-                                       <th>USD price</th>
+                                       <th>Price [$]</th>
+                                       <th>Last price [BTC]</th>
+                                       <th>Average price [BTC]</th>
+                                       <th>Volume [BTC]</th>
                                        <th>Amount minted</th>
+                                       <th>Market Cap [M$]</th>
                                        <th>Date minted</th>
-                                       <th>Total donations</th>
-                                       <th>Paid to masterchain</th>
+                                       <th>Donations [$]</th>
+                                       <th>For masterchain</th>
                                    </tr>
                                  </thead>
                                  <tbody>
@@ -108,9 +112,13 @@
                                           <a ng-href="index.html?&currency={{c.symbol}}">{{c.name}}</a>
                                        </td>
                                        <td>{{c.dollar}}</td>
+                                       <td><a ng-href="index.html?filter=accept&currency={{c.symbol}}">{{c.last_price}}</a></td>
+                                       <td>{{c.average_price}}</td>
+                                       <td>{{c.total_paid}}</td>
                                        <td>{{c.amount_minted}}</td>
+                                       <td>{{c.cap}}</td>
                                        <td>{{c.time | date:'dd MMM HH:mm'}}</td>
-                                       <td>{{c.donation}}</td>
+                                       <td>{{c.usd_donation}}</td>
                                        <td>{{c.payment}}</td>
                                     </tr>
                                  </tbody>
