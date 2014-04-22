@@ -15,7 +15,7 @@ function AcceptOfferController($scope, $http) {
 
     $scope.step = 0.1;
     $scope.amount;
-    $scope.fee = 0.0005;
+    $scope.fee = 0.0001;
     $scope.key = "";
 
     $scope.keyChange = function () {
