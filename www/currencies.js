@@ -17,6 +17,23 @@ function CurrenciesController($scope, $http) {
     };
 
 
+    $scope.mysort = function (data) {
+        console.log('sorting');
+        console.log(data);
+        data.sort(function(a, b) {
+            if ((a.symbol[0] == "T") && (b.symbol[0] != "T")) {
+                return 1; // test coins last
+            }
+            if ((a.symbol[0] != "T") && (b.symbol[0] == "T")) {
+                return -1; // test coins last
+            }
+            var textA = a.dollar;
+            var textB = b.dollar;
+            return (textA < textB) ? 1 : (textA > textB) ? -1 : 0;
+        }); 
+        return data;
+    };
+
     $scope.getCurrenciesData = function () {
 
         // parse addr from url parameters
@@ -41,9 +58,15 @@ function CurrenciesController($scope, $http) {
                 var updated_data = currencies_data;
                 var length = currencies_data.length;
                 for (var i = 0; i < length; i++) {
-                    updated_data[i].time=$scope.extracted_currencies[0][currencies_data[i].symbol]['time']
-                    updated_data[i].amount_minted=$scope.extracted_currencies[0][currencies_data[i].symbol]['amount_minted']
-                    updated_data[i].payment=$scope.extracted_currencies[0][currencies_data[i].symbol]['payment']
+                    if (updated_data[i].symbol == "MSC" || updated_data[i].symbol == "TMSC") {
+                        updated_data[i].amount_minted = 619478.6
+                        updated_data[i].time = 1377993874000
+                        updated_data[i].payment = 0.0
+                    } else {
+                        updated_data[i].time=$scope.extracted_currencies[0][currencies_data[i].symbol]['time']
+                        updated_data[i].amount_minted=$scope.extracted_currencies[0][currencies_data[i].symbol]['amount_minted']
+                        updated_data[i].payment=$scope.extracted_currencies[0][currencies_data[i].symbol]['payment']
+                    }
                     updated_data[i].donation=$scope.extracted_currencies[0][currencies_data[i].symbol]['donation']
                     console.log('updated_data[i]')
                     console.log(updated_data[i])
@@ -85,15 +108,12 @@ function CurrenciesController($scope, $http) {
                                     updated_data[j].total_paid = total_paid;
                                     updated_data[j].dollar = last_price*btc_price;
                                     var amount_minted = updated_data[j].amount_minted;
-                                    if (updated_data[j].symbol == "MSC") {
-                                        amount_minted = 619478.6
-                                    }
                                     updated_data[j].cap = last_price*btc_price*amount_minted/1000000;
                                 }
                             }
                         }
                     } 
-                    $scope.currency_values = updated_data;
+                    $scope.currency_values = $scope.mysort(updated_data);
                     console.log($scope.currency_values);
                 });
             });
