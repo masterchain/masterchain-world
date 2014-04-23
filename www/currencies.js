@@ -83,7 +83,7 @@ function CurrenciesController($scope, $http) {
                     // get BTC price
                     var btc_price = 0;
                     for (var k = 0; k < currencies_length; k++) {
-                        if (updated_data[k].dollar != 0) {
+                        if (updated_data[k].symbol == "BTC") {
                             btc_price = updated_data[k].dollar;
                         }
                     }
