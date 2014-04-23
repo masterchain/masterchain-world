@@ -87,7 +87,7 @@
             </div>
             <div class="container page-container">
                <div class="row">
-                  <div class="no-fixed col-sm-9 col-sm-push-3 col-md-10 col-md-push-2">
+                  <div class="left_bar jumbotron col-sm-12 col-sm-pull-0 col-md-12 col-md-pull-0">
                      <div class="inner" ng-controller="CurrenciesController" ng-init="getCurrenciesData()">
                         <div class="row" ng-show="currency_values.length">
                            <div class="col-md-12">
@@ -129,23 +129,6 @@
                      </div>
                   </div>
 
-                  <div class="left_bar jumbotron col-sm-3 col-sm-pull-9 col-md-2 col-md-pull-10">
-                     <nav>
-                        <div class="navItems col-xs-6 col-sm-12 no-padding" ng-repeat="val in values">
-                           <a href="{{val.newUrl}}" class="panel-link">
-                              <div class="panel panel-default {{val.selected}}">
-                                 <div class="panel-heading">
-                                    <img ng-src="img/{{val.trend}}Icon.png"/> {{val.name}}
-                                 </div>
-                                 <div class="panel-body" ng-style="{'background': val.trend2}">
-                                    <div class="col-xs-3 no-padding">{{val.currency}}</div>
-                                    <div class="col-xs-9">{{val.last_price}}</div>
-                                 </div>
-                              </div>
-                           </a>
-                        </div>
-                     </nav>
-                  </div>
                </div>
             </div>
             <!-- /container -->
