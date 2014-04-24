@@ -21,15 +21,34 @@ function CurrenciesController($scope, $http) {
         console.log('sorting');
         console.log(data);
         data.sort(function(a, b) {
+            if (a.symbol == "BTC") {
+                return -1; // BTC coin first
+            }
+            if (b.symbol == "BTC") {
+                return 1; // BTC coin first
+            }
             if ((a.symbol[0] == "T") && (b.symbol[0] != "T")) {
                 return 1; // test coins last
             }
             if ((a.symbol[0] != "T") && (b.symbol[0] == "T")) {
                 return -1; // test coins last
             }
-            var textA = a.dollar;
-            var textB = b.dollar;
-            return (textA < textB) ? 1 : (textA > textB) ? -1 : 0;
+            var fa;
+            var fb;
+            if (typeof a.total_paid == 'undefined') {
+                console.log("setting to zero");
+                fa = 0;
+            } else {
+                fa = parseFloat(a.total_paid);
+            }
+            if (typeof b.total_paid == 'undefined') {
+                console.log("setting to zero");
+                fb = 0;
+            } else {
+                fb = parseFloat(b.total_paid);
+            }
+            (fa < fb) ? console.log(a.total_paid+'<'+b.total_paid) : (fa > fb) ? console.log(a.total_paid+'>'+b.total_paid) : console.log(a.total_paid+'='+b.total_paid);
+            return (fa < fb) ? 1 : (fa > fb) ? -1 : 0;
         }); 
         return data;
     };
