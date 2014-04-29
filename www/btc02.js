@@ -38,7 +38,7 @@ function BTCController($scope, $http) {
     	if (myURLParams['filter'] && BTCUtils.isFilter(myURLParams['filter'])) {
     		document.title = "Recent " + myURLParams['filter'];
     	} else {
-                document.title = "Recent unknown";
+                document.title = "Recent";
         }
         // Clear scope members
         $scope.currentPageStart = (1+$i-($i%$scope.showPages));
