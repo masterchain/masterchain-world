@@ -103,6 +103,9 @@ function AdressController($scope, $http) {
 		text: myURLParams['addr']
 		});
 	var currencyName = myURLParams['currency'];
+        if (!BTCUtils.isCurrencySymbol(currencyName)) {
+                currencyName = 'Unknown';
+        }
         var currencyIdentity;	
         // Make the http request for extracted_currencies and process the result
 	var extracted_currencies_file = 'general/extracted_currencies.json';	

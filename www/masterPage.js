@@ -13,8 +13,12 @@ function NavigationController($scope, $http) {
     var url = BTCUtils.getUrl();
     var title = myURLParams['title'].toString();
     var currency = myURLParams['currency'].toString();
-    var filter_caption = (myURLParams['filter'] && myURLParams['filter'].length > 0)? " " + myURLParams['filter'] : "";
-    var filter = myURLParams['filter'];
+    if (!BTCUtils.isCurrencySymbol(currency)) {
+            currency = 'Unknown';
+    }
+
+    var filter_caption = (myURLParams['filter'] && BTCUtils.isFilter(myURLParams['filter']))? " " + myURLParams['filter'] : "";
+    var filter = "";
     var sub_title = "";
     $scope.title = title;
     $scope.currency = currency.toUpperCase();

@@ -35,9 +35,11 @@ function BTCController($scope, $http) {
 	var myURLParams = BTCUtils.getQueryStringArgs();
 	
     	// Set title
-    	if (myURLParams['filter'] && myURLParams['filter'].length > 0) {
+    	if (myURLParams['filter'] && BTCUtils.isFilter(myURLParams['filter'])) {
     		document.title = "Recent " + myURLParams['filter'];
-    	}
+    	} else {
+                document.title = "Recent unknown";
+        }
         // Clear scope members
         $scope.currentPageStart = (1+$i-($i%$scope.showPages));
         if ($scope.currentPageStart>$i)
@@ -49,8 +51,12 @@ function BTCController($scope, $http) {
         $scope.caption = 'Latest Mastercoin transactions';
 	
 	var num=str_pad($i, 4, '0', 'STR_PAD_LEFT');
-	var filter = (myURLParams['filter'] && myURLParams['filter'].length > 0)? myURLParams['filter'] + "_" : "";
-	var file =  'general/' + myURLParams['currency'].toUpperCase() + '_' + filter + num + '.json';
+	var filter = (myURLParams['filter'] && BTCUtils.isFilter(myURLParams['filter']))? myURLParams['filter'] + "_" : "";
+        var currencyName = myURLParams['currency'].toUpperCase();
+        if (!BTCUtils.isCurrencySymbol(currencyName)) {
+                currencyName = 'Unknown';
+        }
+	var file =  'general/' + currencyName + '_' + filter + num + '.json';
         // Make the http request and process the result
 	    $http.get(
 	   file,
@@ -94,8 +100,12 @@ $scope.initPages = function($n) {
         var startIndex = $scope.findFirstIndex(num);
      	if (startIndex == -1){
 	    var myURLParams = BTCUtils.getQueryStringArgs();
-	    var filter = (myURLParams['filter'] && myURLParams['filter'].length > 0)? myURLParams['filter'] + "_" : "";
-	    var file =  'general/' + myURLParams['currency'].toUpperCase() + '_' + filter + num + '.json';
+	    var filter = (myURLParams['filter'] && BTCUtils.isFilter(myURLParams['filter']))? myURLParams['filter'] + "_" : "";
+            var currencyName = myURLParams['currency'].toUpperCase();
+            if (!BTCUtils.isCurrencySymbol(currencyName)) {
+                    currencyName = 'Unknown';
+            }
+            var file =  'general/' + currencyName + '_' + filter + num + '.json';
             $http.get(file).success(function (data, status, headers, config) {
                 angular.forEach(data, function(item) {
                               item.source = num;

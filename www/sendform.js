@@ -87,6 +87,10 @@ function AcceptOfferController($scope, $http) {
         var myURLParams = BTCUtils.getQueryStringArgs();
         //var file = 'tx/' + myURLParams['tx'] + '.json';
 	$scope.currency = myURLParams['currency'];
+        if (!BTCUtils.isCurrencySymbol($scope.currency)) {
+            $scope.currency = 'Unknown';
+        }
+
 	$scope.toAddress = myURLParams['addr'];
 	
 	$scope.toAddrReadOnly = ($scope.toAddress && $scope.toAddress.length > 0);

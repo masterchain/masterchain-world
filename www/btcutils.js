@@ -57,6 +57,16 @@ BTCUtils.isTxId = function(txid) {
     return re.test(txid);
 }
 
+BTCUtils.isCurrencySymbol = function(currency) {
+    var re = /^[A-ZJa-z]{3,10}$/;
+    return re.test(currency);
+}
+
+BTCUtils.isFilter = function(filter) {
+    var re = /^[A-ZJa-z]{3,10}$/;
+    return re.test(filter);
+}
+
 BTCUtils.replaceCurrency = function(url, c) {
     var oldUrl;
     var newUrl;

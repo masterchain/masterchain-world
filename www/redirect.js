@@ -14,6 +14,10 @@ $(document).ready(function () {
 
     var tx = myURLParams['tx'];
     var currency = myURLParams['currency'];
+    if (!BTCUtils.isCurrencySymbol(currency)) {
+            currencyName = 'Unknown';
+    }
+
     var url = '';
     if (tx.length < 63)
     {

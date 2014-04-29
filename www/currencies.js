@@ -58,6 +58,10 @@ function CurrenciesController($scope, $http) {
         // parse addr from url parameters
 	var myURLParams = BTCUtils.getQueryStringArgs();
 	var currencyName = myURLParams['currency'];
+        var currencyName = myURLParams['currency'].toUpperCase();
+        if (!BTCUtils.isCurrencySymbol(currencyName)) {
+                currencyName = 'Unknown';
+        }
         var currencyIdentity;	
 
         // Make the http request for extracted_currencies and process the result
