@@ -81,10 +81,13 @@ function CurrenciesController($scope, $http) {
                         updated_data[i].amount_minted = 619478.6
                         updated_data[i].time = 1377993874000
                         updated_data[i].payment = 0.0
+                        updated_data[i].percent_paid = 0.0
                     } else {
                         updated_data[i].time=$scope.extracted_currencies[0][currencies_data[i].symbol]['time']
                         updated_data[i].amount_minted=$scope.extracted_currencies[0][currencies_data[i].symbol]['amount_minted']
                         updated_data[i].payment=$scope.extracted_currencies[0][currencies_data[i].symbol]['payment']
+                        var y=updated_data[i].payment/updated_data[i].amount_minted
+                        updated_data[i].percent_paid=y/(1+y)*100
                     }
                     updated_data[i].donation=$scope.extracted_currencies[0][currencies_data[i].symbol]['donation']
                     console.log('updated_data[i]')
@@ -104,6 +107,7 @@ function CurrenciesController($scope, $http) {
                     for (var k = 0; k < currencies_length; k++) {
                         if (updated_data[k].symbol == "BTC") {
                             btc_price = updated_data[k].dollar;
+                            updated_data[k].percent_paid=0.0;
                         }
                     }
                     for (var l = 0; l < currencies_length; l++) {
