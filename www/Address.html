@@ -250,7 +250,7 @@
                                              alt="" />
                                           <a ng-href="sellaccept.html?tx={{trans.tx_hash}}&currency={{currency}}">{{trans.tx_hash | characters:10}}</a>
                                        </td>
-                                       <td>{{trans.formatted_amount_accepted}}</td>
+                                       <td>{{trans.formatted_amount_bought}}</td>
                                        <td>{{trans.tx_time | date:'dd MMM HH:mm'}}</td>
                                     </tr>
                                  </tbody>
@@ -316,7 +316,7 @@
                                              alt="" />
                                           <a ng-href="selloffer.html?tx={{trans.tx_hash}}&currency={{currency}}">{{trans.tx_hash | characters:10}}</a>
                                        </td>
-                                       <td>{{trans.formatted_amount}}</td>
+                                       <td>{{trans.formatted_amount_available}}</td>
                                        <td>{{trans.tx_time | date:'dd MMM HH:mm'}}</td>
                                     </tr>
                                  </tbody>
