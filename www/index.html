@@ -145,7 +145,10 @@
                                        <span ng-switch-default>
                                        </span>
                                     </td>
-                                    <td>{{trans.formatted_amount}}</td>
+                                    <td ng-switch on="trans.icon">
+                                        <span ng-switch-when="selloffer">{{trans.formatted_amount_available}}</span>
+                                        <span ng-switch-default>{{trans.formatted_amount}}</span>
+                                    </td>
                                     <td>{{trans.tx_time | date:'dd MMM HH:mm'}}</td>
                                  </tr>
                               </tbody>
