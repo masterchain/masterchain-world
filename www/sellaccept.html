@@ -130,6 +130,7 @@
                                             <td ng-switch on="transactionInformation.status">
                                                 <span class="pull-left">{{transactionInformation.formatted_amount_accepted}}</span>
                                                 <span ng-switch-when="Closed"></span>
+                                                <span ng-switch-when="Expired"></span>
                                                 <span ng-switch-default>
                                                     <a href="sendform.html?addr={{transactionInformation.to_address}}&amount={{transactionInformation.bitcoin_required}}&from={{transactionInformation.from_address}}&currency=BTC&marker={{transactionInformation.exodus_scan}}">
                                                         <button type="button" class="pull-right btc-tbl-btn btn btn-success btn-xs">PAY</button></a>

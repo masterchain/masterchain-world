@@ -33,6 +33,7 @@ function TransactionController($scope, $http) {
         $http.get(file, {}).success(function (data, status, headers, config) {
             $scope.transactionInformation = data[0];
             $scope.updateReason();
+            $scope.updateActive();
         });
 
         var bidsURL = "offers/offers-";
@@ -57,5 +58,15 @@ function TransactionController($scope, $http) {
         if (!angular.isArray($scope.transactionInformation.invalid)) return;
         if ($scope.transactionInformation.invalid.length < 2) return;
         $scope.reason = $scope.transactionInformation.invalid[1];
+    }
+    $scope.updateActive = function () {
+        $scope.transactionInformation.active = true;
+        if (!angular.isUndefined($scope.transactionInformation.updated_by)) {
+            $scope.transactionInformation.active = false;
+        }
+        if ($scope.transactionInformation.icon_text.indexOf("ancel") >= 0) {
+            $scope.transactionInformation.active = false;
+        }
+        console.log($scope.transactionInformation.active)
     }
 }

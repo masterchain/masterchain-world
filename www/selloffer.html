@@ -114,19 +114,34 @@
                                         </tr>
                                         <tr>
                                             <td>Price per coin</td>
-                                            <td><span class="pull-left">{{transactionInformation.formatted_price_per_coin}} &#3647;/coin</span>
-                                                <button type="button" ng-click="AcceptClick()" class="pull-right btn btn-success btn-xs">ACCEPT</button></td>
+                                            <td ng-switch on="transactionInformation.active">
+                                                <span class="pull-left">{{transactionInformation.formatted_price_per_coin}} &#3647;/coin</span>
+                                                <span ng-switch-when="true">
+                                                    <button type="button" ng-click="AcceptClick()" class="pull-right btn btn-success btn-xs">ACCEPT</button>
+                                                </span>
+                                                <span ng-switch-default></span>
+                                            </td>
+
+
                                         </tr>
                                         <tr>
                                             <td>Amount requested</td>
-                                            <td><span class="pull-left">{{transactionInformation.formatted_amount}}</span>
-                                                <a href="sellform.html?addr=&amount={{transactionInformation.balance}}&from={{transactionInformation.from_address}}&currency={{currency}}&action=Update"><button type="button" class="pull-right btn btn-success btn-xs">UPDATE</button></a>
+                                            <td ng-switch on="transactionInformation.active">
+                                                <span class="pull-left">{{transactionInformation.formatted_amount}}</span>
+                                                <span ng-switch-when="true">
+                                                    <a href="sellform.html?addr=&amount={{transactionInformation.balance}}&from={{transactionInformation.from_address}}&currency={{currency}}&action=Update"><button type="button" class="pull-right btn btn-success btn-xs">UPDATE</button></a>
+                                                </span>
+                                                <span ng-switch-default></span>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>Amount available</td>
-                                            <td><span class="pull-left">{{transactionInformation.formatted_amount_available}}</span>
-                                                <a href="sellform.html?addr=&amount={{transactionInformation.balance}}&from={{transactionInformation.from_address}}&currency={{currency}}&amount=0&price=0&action=Cancel"><button type="button" class="pull-right btn btn-success btn-xs">CANCEL</button></a>
+                                            <td ng-switch on="transactionInformation.active">
+                                                <span class="pull-left">{{transactionInformation.formatted_amount_available}}</span>
+                                                <span ng-switch-when="true">
+                                                    <a href="sellform.html?addr=&amount={{transactionInformation.balance}}&from={{transactionInformation.from_address}}&currency={{currency}}&amount=0&price=0&action=Cancel"><button type="button" class="pull-right btn btn-success btn-xs">CANCEL</button></a>
+                                                </span>
+                                                <span ng-switch-default></span>
                                             </td>
                                         </tr>
                                         <tr>
